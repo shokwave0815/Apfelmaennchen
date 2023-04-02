@@ -5,7 +5,7 @@ unit main;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, GraphUtil,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, LCLType, ComCtrls, Spin, mandelbrot;
 
 const MyVersion = 'Apfelmännchen V1.0 ©2023 by shoKwave';
@@ -32,6 +32,7 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -39,8 +40,6 @@ type
   private
     MandelBrot: TMandelbrot;
     procedure PaintMandelbrot();
-    procedure SetMousePosToCenter(const Y: Integer; const X: Integer);
-    procedure SetZoom(Factor: Double);
     procedure UpdateStatus();
     procedure RefreshPicture();
   public
@@ -59,6 +58,7 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Caption:= MyVersion;
+
   Mandelbrot:= TMandelbrot.Create(PaintBox1.Width, PaintBox1.Height, 200, 256);
   Mandelbrot.SetStartPoint(-2, -1.2);
   MandelBrot.Calulate();
@@ -79,7 +79,8 @@ end;
 
 procedure TForm1.Button_ZoomClick(Sender: TObject);
 begin
-  SetZoom(FloatSpinEdit_Zoom.Value);
+  MandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
+  RefreshPicture();
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -89,7 +90,8 @@ end;
 
 procedure TForm1.Button_OutClick(Sender: TObject);
 begin
-  SetZoom(-1 * FloatSpinEdit_Zoom.Value);
+  MandelBrot.ZoomInOrOut(-1 * FloatSpinEdit_Zoom.Value);
+  RefreshPicture();
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -108,6 +110,12 @@ begin
   UpdateStatus();
 end;
 
+procedure TForm1.FormResize(Sender: TObject);
+begin
+  MandelBrot.SetSize(PaintBox1.Width, PaintBox1.Height);
+  RefreshPicture();
+end;
+
 procedure TForm1.FormShow(Sender: TObject);
 begin
   RefreshPicture();
@@ -118,8 +126,8 @@ procedure TForm1.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
 begin
   if (Button = mbLeft) then
   begin
-    SetMousePosToCenter(Y, X);
-    SetZoom(FloatSpinEdit_Zoom.Value);
+    MandelBrot.SetPosToCenter(X, Y);
+    MandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
     RefreshPicture();
   end;
 end;
@@ -132,38 +140,6 @@ end;
 procedure TForm1.PaintMandelbrot();
 begin
   PaintBox1.Canvas.Draw(0, 0, MandelBrot.GetBitmap());
-end;
-
-procedure TForm1.SetMousePosToCenter(const Y: Integer; const X: Integer);
-begin
-{  StartX := StartX + (X - PaintBox1.Width / 2) / Zoom;
-  StartY := StartY + (Y - PaintBox1.Height / 2) / Zoom;
-  }
-end;
-
-procedure TForm1.SetZoom(Factor: Double);
-var
-  newYValue: Extended;
-  oldYValue: Extended;
-  newXValue: Extended;
-  oldXValue: Extended;
-begin
-{  oldXValue:= PaintBox1.Width / Zoom;
-  oldYValue:= PaintBox1.Height / Zoom;
-
-  if Factor > 0 then
-    Zoom := Trunc(Zoom * Factor)
-  else
-    Zoom := Trunc(Zoom / Abs(Factor));
-
-  newXValue := PaintBox1.Width / Zoom;
-  newYValue := PaintBox1.Height / Zoom;
-
-  StartX:= StartX + (oldXValue - newXValue) / 2;
-  StartY:= StartY + (oldYValue - newYValue) / 2;
-  MaxIterations:= Trunc(MaxIterations * (1 + Factor / 30));
-}
-  MandelBrot.ZoomInOrOut(Factor);
 end;
 
 procedure TForm1.UpdateStatus;

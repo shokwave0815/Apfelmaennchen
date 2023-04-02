@@ -1,20 +1,21 @@
 object Form1: TForm1
   Left = 352
-  Height = 480
+  Height = 512
   Top = 34
   Width = 640
   Caption = 'Form1'
-  ClientHeight = 480
+  ClientHeight = 512
   ClientWidth = 640
   DesignTimePPI = 120
   KeyPreview = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
+  OnResize = FormResize
   OnShow = FormShow
   object PaintBox1: TPaintBox
     Left = 0
-    Height = 388
+    Height = 420
     Top = 63
     Width = 640
     Align = alClient
@@ -24,7 +25,7 @@ object Form1: TForm1
   object StatusBar1: TStatusBar
     Left = 0
     Height = 29
-    Top = 451
+    Top = 483
     Width = 640
     Panels = <>
   end

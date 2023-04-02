@@ -16,8 +16,6 @@ type
       FBitmap: TBitmap;
       FStartReal: Extended;
       FStartImagenary: Extended;
-      FRangeReal: Extended;
-      FRangeImagenary: Extended;
       FWidth: Integer;
       FHeight: Integer;
       FMaxIterations: LongWord;
@@ -31,6 +29,7 @@ type
       function GetMaxIterations(): LongWord;
       function GetStartReal(): Extended;
       function GetStartImagenary(): Extended;
+      procedure SetPosToCenter(const x: Integer; const y: Integer);
       procedure SetSize(const Width: Integer; const Height: Integer);
       procedure SetStartPoint(const x: Extended; const y: Extended);
       procedure SetZoom(const Zoom: LongWord);
@@ -128,12 +127,17 @@ begin
   Result:= FStartImagenary;
 end;
 
+procedure TMandelbrot.SetPosToCenter(const x: Integer; const y: Integer);
+begin
+  FStartReal := FStartReal + (x - FWidth / 2) / FZoom;
+  FStartImagenary := FStartImagenary + (y - FHeight / 2) / FZoom;
+end;
+
 procedure TMandelbrot.SetSize(const Width: Integer; const Height: Integer);
 begin
   FWidth:= Width;
   FHeight:= Height;
   FBitmap.SetSize(Width, Height);
-  FBitmap.Clear;
 end;
 
 procedure TMandelbrot.SetStartPoint(const x: Extended; const y: Extended);
@@ -165,8 +169,9 @@ begin
   newXValue := FWidth / FZoom;
   newYValue := FHeight / FZoom;
 
-  FStartReal:= FStartImagenary + (oldXValue - newXValue) / 2;
+  FStartReal:= FStartReal + (oldXValue - newXValue) / 2;
   FStartImagenary:= FStartImagenary + (oldYValue - newYValue) / 2;
+
   //FMaxIterations:= Trunc(FMaxIterations * (1 + Factor / 30));
 end;
 
