@@ -134,10 +134,14 @@ begin
 end;
 
 procedure TMandelbrot.SetSize(const Width: Integer; const Height: Integer);
+var x, y: Integer;
 begin
+  x:= FWidth div 2;
+  y:= Fheight div 2;
   FWidth:= Width;
   FHeight:= Height;
   FBitmap.SetSize(Width, Height);
+  SetPosToCenter(x, y);
 end;
 
 procedure TMandelbrot.SetStartPoint(const x: Extended; const y: Extended);
@@ -177,7 +181,10 @@ end;
 
 procedure TMandelbrot.SetMaxIterations(const MaxIterations: LongWord);
 begin
-
+  if (FMaxIterations > 4) then
+   FMaxIterations:= MaxIterations
+  else
+    Inc(FMaxIterations);
 end;
 
 procedure TMandelbrot.Calulate;

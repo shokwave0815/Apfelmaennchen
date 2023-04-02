@@ -97,13 +97,8 @@ end;
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   case Key of
-    VK_MULTIPLY: begin
-      Mandelbrot.SetMaxIterations(Trunc(Mandelbrot.GetMaxIterations() * 1.2));
-    end;
-    VK_DIVIDE: begin
-      if (Mandelbrot.GetMaxIterations() > 1) then
-        Mandelbrot.SetMaxIterations(Trunc(Mandelbrot.GetMaxIterations() / 1.2));
-    end;
+    VK_MULTIPLY: Mandelbrot.SetMaxIterations(Round(Mandelbrot.GetMaxIterations() * 1.2));
+    VK_DIVIDE: Mandelbrot.SetMaxIterations(Round(Mandelbrot.GetMaxIterations() / 1.2));
     VK_ADD: Button_ZoomClick(nil);
     VK_SUBTRACT: Button_OutClick(nil);
   end;
