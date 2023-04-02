@@ -73,7 +73,7 @@ begin
   NumIterations:= Iterations;
 
   ColorVal:= NumIterations div FMaxIterations;
-  Hue:= Round((360 * NumIterations) / FMaxIterations);
+  Hue:= Round((360 * NumIterations) / FMaxIterations + 180);
   Saturation:= 255;
   if NumIterations = FMaxIterations then
     Brightness := 0

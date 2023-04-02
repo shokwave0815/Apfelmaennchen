@@ -80,7 +80,6 @@ end;
 procedure TForm1.Button_ZoomClick(Sender: TObject);
 begin
   MandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
-  RefreshPicture();
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -91,7 +90,6 @@ end;
 procedure TForm1.Button_OutClick(Sender: TObject);
 begin
   MandelBrot.ZoomInOrOut(-1 * FloatSpinEdit_Zoom.Value);
-  RefreshPicture();
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -101,6 +99,7 @@ begin
     VK_DIVIDE: Mandelbrot.SetMaxIterations(Round(Mandelbrot.GetMaxIterations() / 1.2));
     VK_ADD: Button_ZoomClick(nil);
     VK_SUBTRACT: Button_OutClick(nil);
+    VK_RETURN: RefreshPicture();
   end;
   UpdateStatus();
 end;
@@ -122,7 +121,7 @@ begin
   if (Button = mbLeft) then
   begin
     MandelBrot.SetPosToCenter(X, Y);
-    MandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
+    //MandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
     RefreshPicture();
   end;
 end;

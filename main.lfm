@@ -94,6 +94,7 @@ object Form1: TForm1
       Caption = 'Save Picture'
       OnClick = Button_SavePictureClick
       TabOrder = 4
+      TabStop = False
     end
   end
   object SaveDialog1: TSaveDialog
