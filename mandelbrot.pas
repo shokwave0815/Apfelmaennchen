@@ -22,7 +22,7 @@ type
       FHeight: Integer;
       FMaxIterations: LongWord;
       FZoom: LongWord;
-      function Iterate(): LongWord;
+      function Iterate(const NumReal: Extended; const NumImagenary: Extended): LongWord;
       function CalculateColor(const Iterations: LongWord): TColor;
     public
       constructor Create(const Width: Integer; const Height: Integer; const Zoom: LongWord);
@@ -38,7 +38,7 @@ implementation
 
 { TMandelbrot }
 
-function TMandelbrot.Iterate: LongWord;
+function TMandelbrot.Iterate(const NumReal: Extended; const NumImagenary: Extended): LongWord;
 var
   xt: Extended;
   zy: Extended;
@@ -50,10 +50,10 @@ begin
   zy := 0;
   Result := 0;
 
-  cx:= FStartReal + FWidth / Zoom;
-  cy:= FStartImagenary + FHeight / Zoom;
+  cx:= NumReal + FWidth / FZoom;
+  cy:= NumImagenary + FHeight / FZoom;
 
-  while (Result < MaxIterations) and ((zx * zx + zy * zy) < 4) do
+  while (Result < FMaxIterations) and ((zx * zx + zy * zy) < 4) do
   begin
     xt := zx * zy;
     zx := zx * zx - zy * zy + cx;
@@ -69,11 +69,11 @@ var Hue, Saturation, Brightness: Integer;
 begin
   NumIterations:= Iterations;
 
-  ColorVal:= NumIterations div MaxIterations;
-  Hue:= (360 * NumIterations) div MaxIterations - 180;
+  ColorVal:= NumIterations div FMaxIterations;
+  Hue:= (360 * NumIterations) div FMaxIterations - 180;
   Saturation:= 255;
   Brightness:= 255 - colorval;
-  if NumIterations = MaxIterations then
+  if NumIterations = FMaxIterations then
     Brightness := 0;
 
   Result := HSVRangeToColor(Hue, Saturation, Brightness);
@@ -128,7 +128,7 @@ begin
     for x := 0 to FWidth - 1 do
     begin
       NumIterations:= Iterate(y, x);
-      Result.Canvas.Pixels[x, y] := CalculateColor(NumIterations);
+      FBitmap.Canvas.Pixels[x, y] := CalculateColor(NumIterations);
     end;
   end;
 end;
