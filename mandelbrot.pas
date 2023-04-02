@@ -22,10 +22,10 @@ type
       FHeight: Integer;
       FMaxIterations: LongWord;
       FZoom: LongWord;
-      function Iterate(const NumReal: Extended; const NumImagenary: Extended): LongWord;
+      function Iterate(const x: Integer; const y: Integer): LongWord;
       function CalculateColor(const Iterations: LongWord): TColor;
     public
-      constructor Create(const Width: Integer; const Height: Integer; const Zoom: LongWord);
+      constructor Create(const Width: Integer; const Height: Integer; const Zoom: LongWord; const MaxIterations: LongWord);
       destructor Destroy(); override;
       procedure SetSize(const Width: Integer; const Height: Integer);
       procedure SetStartPoint(const x: Extended; const y: Extended);
@@ -38,7 +38,7 @@ implementation
 
 { TMandelbrot }
 
-function TMandelbrot.Iterate(const NumReal: Extended; const NumImagenary: Extended): LongWord;
+function TMandelbrot.Iterate(const x: Integer; const y: Integer): LongWord;
 var
   xt: Extended;
   zy: Extended;
@@ -50,8 +50,8 @@ begin
   zy := 0;
   Result := 0;
 
-  cx:= NumReal + FWidth / FZoom;
-  cy:= NumImagenary + FHeight / FZoom;
+  cx:= FStartReal + x / FZoom;
+  cy:= FStartImagenary + y / FZoom;
 
   while (Result < FMaxIterations) and ((zx * zx + zy * zy) < 4) do
   begin
@@ -72,21 +72,23 @@ begin
   ColorVal:= NumIterations div FMaxIterations;
   Hue:= (360 * NumIterations) div FMaxIterations - 180;
   Saturation:= 255;
-  Brightness:= 255 - colorval;
   if NumIterations = FMaxIterations then
-    Brightness := 0;
+    Brightness := 0
+  else
+  Brightness:= 255 - colorval;
 
   Result := HSVRangeToColor(Hue, Saturation, Brightness);
 end;
 
 constructor TMandelbrot.Create(const Width: Integer; const Height: Integer;
-  const Zoom: LongWord);
+  const Zoom: LongWord; const MaxIterations: LongWord);
 begin
   inherited Create();
 
   FWidth:= Width;
   FHeight:= Height;
   FZoom:= Zoom;
+  FMaxIterations:= MaxIterations;
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(FWidth, FHeight);
@@ -127,7 +129,7 @@ begin
   begin
     for x := 0 to FWidth - 1 do
     begin
-      NumIterations:= Iterate(y, x);
+      NumIterations:= Iterate(x, y);
       FBitmap.Canvas.Pixels[x, y] := CalculateColor(NumIterations);
     end;
   end;

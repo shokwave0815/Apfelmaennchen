@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, GraphUtil,
-  StdCtrls, LCLType, ComCtrls, Spin;
+  StdCtrls, LCLType, ComCtrls, Spin, mandelbrot;
 
 const MyVersion = 'Apfelmännchen V1.0 ©2023 by shoKwave';
 
@@ -37,6 +37,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure PaintBox1Paint(Sender: TObject);
   private
+    MandelBrot: TMandelbrot;
     Zoom: LongWord;
     CurrentPicture: TBitmap;
     StartX, StartY: Extended;
@@ -65,10 +66,13 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Caption:= MyVersion;
-  StartX := -2;
-  StartY := -1.2;
-  Zoom := 200;
-  MaxIterations:= 256;
+//  StartX := -2;
+//  StartY := -1.2;
+//  Zoom := 200;
+//  MaxIterations:= 256;
+  Mandelbrot:= TMandelbrot.Create(PaintBox1.Width, PaintBox1.Height, 200, 256);
+  Mandelbrot.SetStartPoint(-2, -1.2);
+  MandelBrot.Calulate();
 end;
 
 procedure TForm1.Button_RepaintClick(Sender: TObject);
@@ -92,6 +96,7 @@ end;
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   FreeAndNil(CurrentPicture);
+  FreeAndNil(Mandelbrot);
 end;
 
 procedure TForm1.Button_OutClick(Sender: TObject);
@@ -133,7 +138,8 @@ end;
 
 procedure TForm1.PaintBox1Paint(Sender: TObject);
 begin
-  PaintMandelbrot();
+  //PaintMandelbrot();
+  PaintBox1.Canvas.Draw(0,0, Mandelbrot.GetBitmap());
 end;
 
 procedure TForm1.PaintMandelbrot();
@@ -241,7 +247,9 @@ begin
   Label_Calc.Visible:=true;
   Application.ProcessMessages;
 
+  Mandelbrot.Calulate();
   PaintBox1.Invalidate;
+
 
   Label_Calc.Visible:=false;
   UpdateStatus();
