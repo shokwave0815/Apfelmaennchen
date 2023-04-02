@@ -19,8 +19,9 @@
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form1"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="148"/>
-        <CursorPos X="29" Y="75"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="154"/>
+        <CursorPos X="29" Y="166"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -28,87 +29,14 @@
       <Unit>
         <Filename Value="mandelbrot.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="120"/>
-        <CursorPos X="35" Y="132"/>
+        <TopLine Value="149"/>
+        <CursorPos X="5" Y="170"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="54" TopLine="32"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="56" TopLine="34"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="58" TopLine="36"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="59" TopLine="37"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="60" TopLine="38"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="61" TopLine="39"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="56" TopLine="39"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="63" TopLine="41"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="132" TopLine="119"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="129" TopLine="119"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="131" TopLine="119"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="48" TopLine="35"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="49" TopLine="35"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="50" TopLine="35"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="51" TopLine="35"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="53" TopLine="35"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="54" TopLine="35"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="48" TopLine="35"/>
-      </Position>
       <Position>
         <Filename Value="mandelbrot.pas"/>
         <Caret Line="49" TopLine="35"/>
@@ -156,6 +84,78 @@
       <Position>
         <Filename Value="mandelbrot.pas"/>
         <Caret Line="56" TopLine="39"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="47" TopLine="35"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="41" TopLine="41"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="78" Column="9" TopLine="65"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="77" Column="27" TopLine="64"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="88" TopLine="75"/>
+      </Position>
+      <Position>
+        <Filename Value="mandelbrot.pas"/>
+        <Caret Line="31" Column="44" TopLine="21"/>
+      </Position>
+      <Position>
+        <Filename Value="mandelbrot.pas"/>
+        <Caret Line="30" Column="16" TopLine="17"/>
+      </Position>
+      <Position>
+        <Filename Value="mandelbrot.pas"/>
+        <Caret Line="115" Column="26" TopLine="107"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="100" Column="70" TopLine="87"/>
+      </Position>
+      <Position>
+        <Filename Value="mandelbrot.pas"/>
+        <Caret Line="113" Column="34" TopLine="91"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="104" Column="80" TopLine="90"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="142" Column="4" TopLine="122"/>
+      </Position>
+      <Position>
+        <Filename Value="mandelbrot.pas"/>
+        <Caret Line="33" Column="46" TopLine="16"/>
+      </Position>
+      <Position>
+        <Filename Value="mandelbrot.pas"/>
+        <Caret Line="31" Column="34" TopLine="19"/>
+      </Position>
+      <Position>
+        <Filename Value="mandelbrot.pas"/>
+        <Caret Line="127" Column="27" TopLine="119"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="173" Column="78" TopLine="158"/>
+      </Position>
+      <Position>
+        <Filename Value="mandelbrot.pas"/>
+        <Caret Line="37" Column="49" TopLine="24"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="166" Column="32" TopLine="143"/>
       </Position>
     </JumpHistory>
     <RunParams>

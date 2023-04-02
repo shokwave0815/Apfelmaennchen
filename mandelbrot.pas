@@ -27,9 +27,15 @@ type
     public
       constructor Create(const Width: Integer; const Height: Integer; const Zoom: LongWord; const MaxIterations: LongWord);
       destructor Destroy(); override;
+      function GetZoom(): LongWord;
+      function GetMaxIterations(): LongWord;
+      function GetStartReal(): Extended;
+      function GetStartImagenary(): Extended;
       procedure SetSize(const Width: Integer; const Height: Integer);
       procedure SetStartPoint(const x: Extended; const y: Extended);
-      Procedure SetZoom(const Zoom: LongWord);
+      procedure SetZoom(const Zoom: LongWord);
+      procedure ZoomInOrOut(const Factor: Double);
+      procedure SetMaxIterations(const MaxIterations: LongWord);
       procedure Calulate();
       function GetBitmap(): TBitmap;
   end;
@@ -102,6 +108,26 @@ begin
   inherited Destroy;
 end;
 
+function TMandelbrot.GetZoom: LongWord;
+begin
+  Result:= FZoom;
+end;
+
+function TMandelbrot.GetMaxIterations: LongWord;
+begin
+  Result:= FMaxIterations;
+end;
+
+function TMandelbrot.GetStartReal(): Extended;
+begin
+  Result:= FStartReal;
+end;
+
+function TMandelbrot.GetStartImagenary(): Extended;
+begin
+  Result:= FStartImagenary;
+end;
+
 procedure TMandelbrot.SetSize(const Width: Integer; const Height: Integer);
 begin
   FWidth:= Width;
@@ -119,6 +145,34 @@ end;
 procedure TMandelbrot.SetZoom(const Zoom: LongWord);
 begin
   FZoom:= Zoom;
+end;
+
+procedure TMandelbrot.ZoomInOrOut(const Factor: Double);
+var
+  newYValue: Extended;
+  oldYValue: Extended;
+  newXValue: Extended;
+  oldXValue: Extended;
+begin
+  oldXValue:= FWidth / FZoom;
+  oldYValue:= FHeight / FZoom;
+
+  if Factor > 0 then
+    FZoom := Trunc(FZoom * Factor)
+  else
+    FZoom := Trunc(FZoom / Abs(Factor));
+
+  newXValue := FWidth / FZoom;
+  newYValue := FHeight / FZoom;
+
+  FStartReal:= FStartImagenary + (oldXValue - newXValue) / 2;
+  FStartImagenary:= FStartImagenary + (oldYValue - newYValue) / 2;
+  //FMaxIterations:= Trunc(FMaxIterations * (1 + Factor / 30));
+end;
+
+procedure TMandelbrot.SetMaxIterations(const MaxIterations: LongWord);
+begin
+
 end;
 
 procedure TMandelbrot.Calulate;

@@ -38,15 +38,8 @@ type
     procedure PaintBox1Paint(Sender: TObject);
   private
     MandelBrot: TMandelbrot;
-    Zoom: LongWord;
-    CurrentPicture: TBitmap;
-    StartX, StartY: Extended;
-    MaxIterations: Integer;
     procedure PaintMandelbrot();
-    function Iterate(const y: Integer; const x: Integer): Integer;
     procedure SetMousePosToCenter(const Y: Integer; const X: Integer);
-    function CalculateMandelbrot(): TBitmap;
-    function CalculateColor(const NumIterations: Integer): TColor;
     procedure SetZoom(Factor: Double);
     procedure UpdateStatus();
     procedure RefreshPicture();
@@ -66,10 +59,6 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Caption:= MyVersion;
-//  StartX := -2;
-//  StartY := -1.2;
-//  Zoom := 200;
-//  MaxIterations:= 256;
   Mandelbrot:= TMandelbrot.Create(PaintBox1.Width, PaintBox1.Height, 200, 256);
   Mandelbrot.SetStartPoint(-2, -1.2);
   MandelBrot.Calulate();
@@ -84,7 +73,7 @@ procedure TForm1.Button_SavePictureClick(Sender: TObject);
 begin
   if (SaveDialog1.Execute) then
   begin
-    CurrentPicture.SaveToFile(SaveDialog1.FileName);
+    Mandelbrot.GetBitmap().SaveToFile(SaveDialog1.FileName);
   end;
 end;
 
@@ -95,7 +84,6 @@ end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  FreeAndNil(CurrentPicture);
   FreeAndNil(Mandelbrot);
 end;
 
@@ -108,11 +96,11 @@ procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   case Key of
     VK_MULTIPLY: begin
-      MaxIterations:= Trunc(MaxIterations * 1.2);
+      Mandelbrot.SetMaxIterations(Trunc(Mandelbrot.GetMaxIterations() * 1.2));
     end;
     VK_DIVIDE: begin
-      if (MaxIterations > 1) then
-        MaxIterations := Trunc(MaxIterations / 1.2);
+      if (Mandelbrot.GetMaxIterations() > 1) then
+        Mandelbrot.SetMaxIterations(Trunc(Mandelbrot.GetMaxIterations() / 1.2));
     end;
     VK_ADD: Button_ZoomClick(nil);
     VK_SUBTRACT: Button_OutClick(nil);
@@ -138,77 +126,19 @@ end;
 
 procedure TForm1.PaintBox1Paint(Sender: TObject);
 begin
-  //PaintMandelbrot();
   PaintBox1.Canvas.Draw(0,0, Mandelbrot.GetBitmap());
 end;
 
 procedure TForm1.PaintMandelbrot();
 begin
-  if (CurrentPicture <> Nil) then
-    FreeAndNil(CurrentPicture);
-  CurrentPicture:= CalculateMandelbrot();
-  PaintBox1.Canvas.Draw(0, 0, CurrentPicture);
-end;
-
-function TForm1.Iterate(const y: integer; const x: integer): Integer;
-var
-  xt: Extended;
-  zy: Extended;
-  zx: Extended;
-  cy: Extended;
-  cx: Extended;
-begin
-  zx := 0;
-  zy := 0;
-  Result := 0;
-
-  cx:= StartX + x / Zoom;
-  cy:= StartY + y / Zoom;
-
-  while (Result < MaxIterations) and ((zx * zx + zy * zy) < 4) do
-  begin
-    xt := zx * zy;
-    zx := zx * zx - zy * zy + cx;
-    zy := 2 * xt + cy;
-    inc(Result);
-  end;
+  PaintBox1.Canvas.Draw(0, 0, MandelBrot.GetBitmap());
 end;
 
 procedure TForm1.SetMousePosToCenter(const Y: Integer; const X: Integer);
 begin
-  StartX := StartX + (X - PaintBox1.Width / 2) / Zoom;
+{  StartX := StartX + (X - PaintBox1.Width / 2) / Zoom;
   StartY := StartY + (Y - PaintBox1.Height / 2) / Zoom;
-end;
-
-function TForm1.CalculateMandelbrot: TBitmap;
-var x, y, NumIterations: Integer;
-begin
-  Result:= TBitmap.Create;
-  Result.SetSize(PaintBox1.Width, PaintBox1.Height);
-  Result.Clear;
-
-  for y := 0 to Result.Height - 1 do
-  begin
-    for x := 0 to Result.Width - 1 do
-    begin
-      NumIterations:= Iterate(y, x);
-      Result.Canvas.Pixels[x, y] := CalculateColor(NumIterations);
-    end;
-  end;
-end;
-
-function TForm1.CalculateColor(const NumIterations: Integer): TColor;
-var Hue, Saturation, Brightness: Integer;
-  ColorVal: Integer;
-begin
-  ColorVal:= NumIterations div MaxIterations;
-  Hue:= (360 * NumIterations) div MaxIterations - 180;
-  Saturation:= 255;
-  Brightness:= 255 - colorval;
-  if NumIterations = MaxIterations then
-    Brightness := 0;
-
-  Result := HSVRangeToColor(Hue, Saturation, Brightness);
+  }
 end;
 
 procedure TForm1.SetZoom(Factor: Double);
@@ -218,7 +148,7 @@ var
   newXValue: Extended;
   oldXValue: Extended;
 begin
-  oldXValue:= PaintBox1.Width / Zoom;
+{  oldXValue:= PaintBox1.Width / Zoom;
   oldYValue:= PaintBox1.Height / Zoom;
 
   if Factor > 0 then
@@ -232,14 +162,16 @@ begin
   StartX:= StartX + (oldXValue - newXValue) / 2;
   StartY:= StartY + (oldYValue - newYValue) / 2;
   MaxIterations:= Trunc(MaxIterations * (1 + Factor / 30));
+}
+  MandelBrot.ZoomInOrOut(Factor);
 end;
 
 procedure TForm1.UpdateStatus;
 begin
-  Statusbar1.SimpleText:= 'StartX: ' + FormatFloat('0.0##########', StartX) +
-                          '/ StartY: ' + FormatFloat('0.0##########', StartY) +
-                          '/ Zoom: ' + FormatFloat('0.0', Zoom / 200) + 'x' +
-                          '/ Iterations: ' + IntToStr(MaxIterations);
+  Statusbar1.SimpleText:= 'StartX: ' + FormatFloat('0.0##########', Mandelbrot.GetStartReal()) +
+                          '/ StartY: ' + FormatFloat('0.0##########', Mandelbrot.GetStartImagenary()) +
+                          '/ Zoom: ' + FormatFloat('0.0', Mandelbrot.GetZoom() / 200) + 'x' +
+                          '/ Iterations: ' + IntToStr(MandelBrot.GetMaxIterations);
 end;
 
 procedure TForm1.RefreshPicture;
