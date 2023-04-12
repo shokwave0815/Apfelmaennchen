@@ -73,15 +73,19 @@ begin
   NumIterations:= Iterations;
 
   ColorVal:= NumIterations / FMaxIterations;
-  Hue:= Round(360 * ColorVal + 135);
-  Saturation:= 254;
+  //Hue:= Round(255 * ColorVal + 180);
+  Hue:= NumIterations;
+  while Hue > 360 do
+    Hue:= Hue - 360;
+  Hue:= Hue + 180;
+  Saturation:= 255;
   if NumIterations = FMaxIterations then
     Brightness := 0
   else
-    Brightness:= 196;
+    Brightness:= 255;
 
-  //Result := HSVRangeToColor(Hue, Saturation, Brightness);
-  Result := HLSToColor(Hue, Brightness, Saturation);
+  Result := HSVRangeToColor(Hue, Saturation, Brightness);
+  //Result := HLSToColor(Hue, Brightness, Saturation);
 end;
 
 constructor TMandelbrot.Create(const Width: Integer; const Height: Integer;
