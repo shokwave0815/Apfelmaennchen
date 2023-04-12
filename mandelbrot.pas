@@ -74,7 +74,7 @@ begin
 
   ColorVal:= NumIterations / FMaxIterations;
   Hue:= Round(360 * ColorVal + 135);
-  Saturation:= 255;
+  Saturation:= 254;
   if NumIterations = FMaxIterations then
     Brightness := 0
   else
