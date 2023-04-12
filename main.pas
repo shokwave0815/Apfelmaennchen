@@ -59,7 +59,7 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   Caption:= MyVersion;
 
-  Mandelbrot:= TMandelbrot.Create(PaintBox1.Width, PaintBox1.Height, 200, 256);
+  Mandelbrot:= TMandelbrot.Create(PaintBox1.Width, PaintBox1.Height, 200, 360);
   Mandelbrot.SetStartPoint(-2, -1.2);
   MandelBrot.Calulate();
 end;
