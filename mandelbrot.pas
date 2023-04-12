@@ -76,7 +76,7 @@ begin
 
   Hue:= NumIterations + 180;
   Saturation:= 128 + NumIterations;
-  if NumIterations = FMaxIterations then
+  if Iterations = FMaxIterations then
     Brightness := 0
   else
     Brightness:= 255;

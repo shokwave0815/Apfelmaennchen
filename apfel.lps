@@ -11,7 +11,7 @@
         <EditorIndex Value="2"/>
         <TopLine Value="12"/>
         <CursorPos Y="24"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -22,7 +22,7 @@
         <ResourceBaseClass Value="Form"/>
         <TopLine Value="56"/>
         <CursorPos X="78" Y="62"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -32,8 +32,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="61"/>
-        <CursorPos Y="83"/>
-        <UsageCount Value="30"/>
+        <CursorPos X="6" Y="79"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
