@@ -38,7 +38,8 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure PaintBox1Paint(Sender: TObject);
   private
-    MandelBrot: TMandelbrot;
+    FPicture: TBitmap;
+    FMandelBrot: TMandelbrot;
     procedure PaintMandelbrot();
     procedure UpdateStatus();
     procedure RefreshPicture();
@@ -59,9 +60,10 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   Caption:= MyVersion;
 
-  Mandelbrot:= TMandelbrot.Create(PaintBox1.Width, PaintBox1.Height, 200, 360);
-  Mandelbrot.SetStartPoint(-2, -1.2);
-  MandelBrot.Calulate();
+  FPicture:= TBitmap.Create;
+  FMandelBrot:= TMandelbrot.Create(PaintBox1.Width, PaintBox1.Height, 200, 360);
+  FMandelBrot.SetStartPoint(-2, -1.2);
+  FMandelBrot.Calulate();
 end;
 
 procedure TForm1.Button_RepaintClick(Sender: TObject);
@@ -73,30 +75,31 @@ procedure TForm1.Button_SavePictureClick(Sender: TObject);
 begin
   if (SaveDialog1.Execute) then
   begin
-    Mandelbrot.GetBitmap().SaveToFile(SaveDialog1.FileName);
+    FMandelBrot.GetBitmap().SaveToFile(SaveDialog1.FileName);
   end;
 end;
 
 procedure TForm1.Button_ZoomClick(Sender: TObject);
 begin
-  MandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
+  FMandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  FreeAndNil(Mandelbrot);
+  FreeAndNil(FPicture);
+  FreeAndNil(FMandelBrot);
 end;
 
 procedure TForm1.Button_OutClick(Sender: TObject);
 begin
-  MandelBrot.ZoomInOrOut(-1 * FloatSpinEdit_Zoom.Value);
+  FMandelBrot.ZoomInOrOut(-1 * FloatSpinEdit_Zoom.Value);
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   case Key of
-    VK_MULTIPLY: Mandelbrot.SetMaxIterations(Round(Mandelbrot.GetMaxIterations() * 1.2));
-    VK_DIVIDE: Mandelbrot.SetMaxIterations(Round(Mandelbrot.GetMaxIterations() / 1.2));
+    VK_MULTIPLY: FMandelBrot.SetMaxIterations(Round(FMandelBrot.GetMaxIterations() * 1.2));
+    VK_DIVIDE: FMandelBrot.SetMaxIterations(Round(FMandelBrot.GetMaxIterations() / 1.2));
     VK_ADD: Button_ZoomClick(nil);
     VK_SUBTRACT: Button_OutClick(nil);
     VK_F5: RefreshPicture();
@@ -106,7 +109,7 @@ end;
 
 procedure TForm1.FormResize(Sender: TObject);
 begin
-  MandelBrot.SetSize(PaintBox1.Width, PaintBox1.Height);
+  FMandelBrot.SetSize(PaintBox1.Width, PaintBox1.Height);
   RefreshPicture();
 end;
 
@@ -120,28 +123,28 @@ procedure TForm1.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
 begin
   if (Button = mbLeft) then
   begin
-    MandelBrot.SetPosToCenter(X, Y);
-    //MandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
+    FMandelBrot.SetPosToCenter(X, Y);
+    //FMandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
     RefreshPicture();
   end;
 end;
 
 procedure TForm1.PaintBox1Paint(Sender: TObject);
 begin
-  PaintBox1.Canvas.Draw(0,0, Mandelbrot.GetBitmap());
+  PaintBox1.Canvas.Draw(0,0, FPicture);
 end;
 
 procedure TForm1.PaintMandelbrot();
 begin
-  PaintBox1.Canvas.Draw(0, 0, MandelBrot.GetBitmap());
+  PaintBox1.Canvas.Draw(0, 0, FPicture);
 end;
 
 procedure TForm1.UpdateStatus;
 begin
-  Statusbar1.SimpleText:= 'StartX: ' + FormatFloat('0.0##########', Mandelbrot.GetStartReal()) +
-                          '/ StartY: ' + FormatFloat('0.0##########', Mandelbrot.GetStartImagenary()) +
-                          '/ Zoom: ' + FormatFloat('0.0', Mandelbrot.GetZoom() / 200) + 'x' +
-                          '/ Iterations: ' + IntToStr(MandelBrot.GetMaxIterations);
+  Statusbar1.SimpleText:= 'StartX: ' + FormatFloat('0.0##########', FMandelBrot.GetStartReal()) +
+                          '/ StartY: ' + FormatFloat('0.0##########', FMandelBrot.GetStartImagenary()) +
+                          '/ Zoom: ' + FormatFloat('0.0', FMandelBrot.GetZoom() / 200) + 'x' +
+                          '/ Iterations: ' + IntToStr(FMandelBrot.GetMaxIterations);
 end;
 
 procedure TForm1.RefreshPicture;
@@ -149,7 +152,9 @@ begin
   Label_Calc.Visible:=true;
   Application.ProcessMessages;
 
-  Mandelbrot.Calulate();
+  FMandelBrot.Calulate();
+  FPicture.SetSize(PaintBox1.Width, PaintBox1.Height);
+  FPicture.Canvas.Draw(0, 0, FMandelBrot.GetBitmap());
   PaintBox1.Invalidate;
 
 
