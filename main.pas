@@ -99,7 +99,7 @@ begin
     VK_DIVIDE: Mandelbrot.SetMaxIterations(Round(Mandelbrot.GetMaxIterations() / 1.2));
     VK_ADD: Button_ZoomClick(nil);
     VK_SUBTRACT: Button_OutClick(nil);
-    VK_RETURN: RefreshPicture();
+    VK_F5: RefreshPicture();
   end;
   UpdateStatus();
 end;

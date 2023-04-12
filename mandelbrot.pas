@@ -67,20 +67,21 @@ end;
 
 function TMandelbrot.CalculateColor(const Iterations: QWord): TColor;
 var Hue, Saturation, Brightness: Integer;
-  ColorVal: LongWord;
+  ColorVal: double;
   NumIterations: QWord;
 begin
   NumIterations:= Iterations;
 
-  ColorVal:= NumIterations div FMaxIterations;
-  Hue:= Round((360 * NumIterations) / FMaxIterations + 180);
+  ColorVal:= NumIterations / FMaxIterations;
+  Hue:= Round(360 * ColorVal + 135);
   Saturation:= 255;
   if NumIterations = FMaxIterations then
     Brightness := 0
   else
-    Brightness:= 255 - colorval;
+    Brightness:= 196;
 
-  Result := HSVRangeToColor(Hue, Saturation, Brightness);
+  //Result := HSVRangeToColor(Hue, Saturation, Brightness);
+  Result := HLSToColor(Hue, Brightness, Saturation);
 end;
 
 constructor TMandelbrot.Create(const Width: Integer; const Height: Integer;
