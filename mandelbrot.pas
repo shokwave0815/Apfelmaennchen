@@ -31,7 +31,7 @@ type
       function GetStartImagenary(): Extended;
       procedure SetPosToCenter(const x: Integer; const y: Integer);
       procedure SetSize(const Width: Integer; const Height: Integer);
-      procedure SetStartPoint(const x: Extended; const y: Extended);
+      procedure SetStartPoint(const AReal: Extended; const AImagenary: Extended);
       procedure SetZoom(const Zoom: LongWord);
       procedure ZoomInOrOut(const Factor: Double);
       procedure SetMaxIterations(const MaxIterations: QWord);
@@ -66,16 +66,20 @@ begin
 end;
 
 function TMandelbrot.CalculateColor(const Iterations: QWord): TColor;
-var Hue, Saturation, Brightness: Integer;
+var Hue, Saturation, Brightness, Divisor: Integer;
   NumIterations: QWord;
 begin
   NumIterations:= Iterations;
-
+  Divisor:= 15;
   while NumIterations > 360 do
     Dec(NumIterations, 360);
 
   Hue:= NumIterations + 180;
-  Saturation:= 128 + NumIterations;
+  //Hue:= (NumIterations div Divisor) * Divisor + 180;
+  Saturation:= 255;
+  //Saturation:= NumIterations + 128;
+  Saturation:= 255 - Trunc((NumIterations mod Divisor) * (255 / Divisor));
+
   if Iterations = FMaxIterations then
     Brightness := 0
   else
@@ -144,10 +148,10 @@ begin
   SetPosToCenter(x, y);
 end;
 
-procedure TMandelbrot.SetStartPoint(const x: Extended; const y: Extended);
+procedure TMandelbrot.SetStartPoint(const AReal: Extended; const AImagenary: Extended);
 begin
-  FStartReal:= x;
-  FStartImagenary:= y;
+  FStartReal:= AReal;
+  FStartImagenary:= AImagenary;
 end;
 
 procedure TMandelbrot.SetZoom(const Zoom: LongWord);
@@ -175,8 +179,6 @@ begin
 
   FStartReal:= FStartReal + (oldXValue - newXValue) / 2;
   FStartImagenary:= FStartImagenary + (oldYValue - newYValue) / 2;
-
-  //FMaxIterations:= Round(FMaxIterations * (1 + Factor / 30));
 end;
 
 procedure TMandelbrot.SetMaxIterations(const MaxIterations: QWord);

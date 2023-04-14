@@ -59,6 +59,7 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Caption:= MyVersion;
+  PaintBox1.Canvas.AntialiasingMode:= amOn;
 
   FPicture:= TBitmap.Create;
   FMandelBrot:= TMandelbrot.Create(PaintBox1.Width, PaintBox1.Height, 200, 360);
@@ -148,17 +149,22 @@ begin
 end;
 
 procedure TForm1.RefreshPicture;
+var   StartTime: Double;
 begin
-  Label_Calc.Visible:=true;
+  Label_Calc.caption:='calculating...';
   Application.ProcessMessages;
 
+  StartTime:= GetTickCount64;
   FMandelBrot.Calulate();
+
   FPicture.SetSize(PaintBox1.Width, PaintBox1.Height);
   FPicture.Canvas.Draw(0, 0, FMandelBrot.GetBitmap());
+  Label_Calc.Caption:='Rendertime: ' + FormatFloat('#,##0.0', (GetTickCount64 - StartTime) / 1000) + 's';
+
   PaintBox1.Invalidate;
 
 
-  Label_Calc.Visible:=false;
+  Label_Calc.Visible:=true;
   UpdateStatus();
 end;
 
