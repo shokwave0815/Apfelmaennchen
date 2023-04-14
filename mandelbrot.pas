@@ -70,7 +70,7 @@ var Hue, Saturation, Brightness, Divisor: Integer;
   NumIterations: QWord;
 begin
   NumIterations:= Iterations;
-  Divisor:= 15;
+  Divisor:= 40;
   while NumIterations > 360 do
     Dec(NumIterations, 360);
 

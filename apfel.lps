@@ -32,7 +32,7 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="68"/>
-        <CursorPos X="27" Y="81"/>
+        <CursorPos X="15" Y="73"/>
         <UsageCount Value="128"/>
         <Loaded Value="True"/>
       </Unit>
@@ -41,14 +41,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="287"/>
         <CursorPos Y="299"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="0"/>
       </Unit>
       <Unit>
         <Filename Value="inerface_mandelbrot.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
         <CursorPos X="17" Y="11"/>
-        <UsageCount Value="83"/>
+        <UsageCount Value="84"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
