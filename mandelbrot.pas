@@ -23,20 +23,19 @@ type
       function Iterate(const x: Integer; const y: Integer): QWord;
       function CalculateColor(const Iterations: QWord): TColor;
     public
-      constructor Create(const Width: Integer; const Height: Integer; const Zoom: QWord; const MaxIterations: QWord);
-      destructor Destroy(); override;
-      function GetZoom(): QWord;
-      function GetMaxIterations(): QWord;
-      function GetStartReal(): Extended;
-      function GetStartImagenary(): Extended;
-      procedure SetPosToCenter(const x: Integer; const y: Integer);
-      procedure SetSize(const Width: Integer; const Height: Integer);
+      property Width: Integer read FWidth;
+      property Height: Integer read FHeight;
+      property StartReal: Extended read FStartReal write FStartReal;
+      property StartImagenary: Extended read FStartImagenary write FStartImagenary;
+      property Zoom: QWord read FZoom write FZoom;
+      property MaxIterations: QWord read FMaxIterations write FMaxIterations;
+      constructor Create(const AWidth: Integer; const AHeight: Integer; const AZoom: QWord; const AMaxIterations: QWord);
+      destructor Destroy; override;
+      procedure SetSize(const AWidth: Integer; const AHeight: Integer);
       procedure SetStartPoint(const AReal: Extended; const AImagenary: Extended);
-      procedure SetZoom(const Zoom: LongWord);
-      procedure ZoomInOrOut(const Factor: Double);
-      procedure SetMaxIterations(const MaxIterations: QWord);
-      procedure Calulate();
-      function GetBitmap(): TBitmap;
+      procedure ZoomInOrOut(const AFactor: Double);
+      procedure Calulate;
+      function GetBitmap: TBitmap;
   end;
 
 implementation
@@ -88,15 +87,15 @@ begin
   Result := HSVRangeToColor(Hue, Saturation, Brightness);
 end;
 
-constructor TMandelbrot.Create(const Width: Integer; const Height: Integer;
-  const Zoom: QWord; const MaxIterations: QWord);
+constructor TMandelbrot.Create(const AWidth: Integer; const AHeight: Integer;
+  const AZoom: QWord; const AMaxIterations: QWord);
 begin
   inherited Create();
 
-  FWidth:= Width;
-  FHeight:= Height;
-  FZoom:= Zoom;
-  FMaxIterations:= MaxIterations;
+  FWidth:= AWidth;
+  FHeight:= AHeight;
+  FZoom:= AZoom;
+  FMaxIterations:= AMaxIterations;
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(FWidth, FHeight);
@@ -109,43 +108,11 @@ begin
   inherited Destroy;
 end;
 
-function TMandelbrot.GetZoom: QWord;
+procedure TMandelbrot.SetSize(const AWidth: Integer; const AHeight: Integer);
 begin
-  Result:= FZoom;
-end;
-
-function TMandelbrot.GetMaxIterations: QWord;
-begin
-  Result:= FMaxIterations;
-end;
-
-function TMandelbrot.GetStartReal(): Extended;
-begin
-  Result:= FStartReal;
-end;
-
-function TMandelbrot.GetStartImagenary(): Extended;
-begin
-  Result:= FStartImagenary;
-end;
-
-procedure TMandelbrot.SetPosToCenter(const x: Integer; const y: Integer);
-begin
-  FStartReal := FStartReal + (x - FWidth / 2) / FZoom;
-  FStartImagenary := FStartImagenary + (y - FHeight / 2) / FZoom;
-end;
-
-procedure TMandelbrot.SetSize(const Width: Integer; const Height: Integer);
-var x, y: Integer;
-begin
-  x:= FWidth div 2;
-  y:= Fheight div 2;
-
-  FWidth:= Width;
-  FHeight:= Height;
-  FBitmap.SetSize(Width, Height);
-
-  SetPosToCenter(x, y);
+  FWidth:= AWidth;
+  FHeight:= AHeight;
+  FBitmap.SetSize(AWidth, AHeight);
 end;
 
 procedure TMandelbrot.SetStartPoint(const AReal: Extended; const AImagenary: Extended);
@@ -154,12 +121,7 @@ begin
   FStartImagenary:= AImagenary;
 end;
 
-procedure TMandelbrot.SetZoom(const Zoom: LongWord);
-begin
-  FZoom:= Zoom;
-end;
-
-procedure TMandelbrot.ZoomInOrOut(const Factor: Double);
+procedure TMandelbrot.ZoomInOrOut(const AFactor: Double);
 var
   newYValue: Extended;
   oldYValue: Extended;
@@ -169,24 +131,16 @@ begin
   oldXValue:= FWidth / FZoom;
   oldYValue:= FHeight / FZoom;
 
-  if Factor > 0 then
-    FZoom := Trunc(FZoom * Factor)
+  if AFactor > 0 then
+    FZoom := Trunc(FZoom * AFactor)
   else
-    FZoom := Trunc(FZoom / Abs(Factor));
+    FZoom := Trunc(FZoom / Abs(AFactor));
 
   newXValue := FWidth / FZoom;
   newYValue := FHeight / FZoom;
 
   FStartReal:= FStartReal + (oldXValue - newXValue) / 2;
   FStartImagenary:= FStartImagenary + (oldYValue - newYValue) / 2;
-end;
-
-procedure TMandelbrot.SetMaxIterations(const MaxIterations: QWord);
-begin
-  if (FMaxIterations > 4) then
-   FMaxIterations:= MaxIterations
-  else
-    Inc(FMaxIterations);
 end;
 
 procedure TMandelbrot.Calulate;

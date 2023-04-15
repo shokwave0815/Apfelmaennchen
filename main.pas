@@ -40,9 +40,10 @@ type
   private
     FPicture: TBitmap;
     FMandelBrot: TMandelbrot;
-    procedure PaintMandelbrot();
-    procedure UpdateStatus();
-    procedure RefreshPicture();
+    procedure Center(const AX: Integer; const AY: Integer);
+    procedure PaintMandelbrot;
+    procedure UpdateStatus;
+    procedure RefreshPicture;
   public
 
   end;
@@ -54,12 +55,10 @@ implementation
 
 {$R *.lfm}
 
-{ TForm1 }
-
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Caption:= MyVersion;
-  PaintBox1.Canvas.AntialiasingMode:= amOn;
+  PaintBox1.Canvas.AntialiasingMode:= amOff;
 
   FPicture:= TBitmap.Create;
   FMandelBrot:= TMandelbrot.Create(PaintBox1.Width, PaintBox1.Height, 200, 360);
@@ -99,8 +98,8 @@ end;
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   case Key of
-    VK_MULTIPLY: FMandelBrot.SetMaxIterations(Round(FMandelBrot.GetMaxIterations() * 1.2));
-    VK_DIVIDE: FMandelBrot.SetMaxIterations(Round(FMandelBrot.GetMaxIterations() / 1.2));
+    VK_MULTIPLY: FMandelBrot.MaxIterations:= Round(FMandelBrot.MaxIterations * 1.2);
+    VK_DIVIDE: FMandelBrot.MaxIterations:= Round(FMandelBrot.MaxIterations / 1.2);
     VK_ADD: Button_ZoomClick(nil);
     VK_SUBTRACT: Button_OutClick(nil);
     VK_F5: RefreshPicture();
@@ -109,8 +108,13 @@ begin
 end;
 
 procedure TForm1.FormResize(Sender: TObject);
+var OldX, OldY: Integer;
 begin
+  OldX:= FMandelBrot.Width div 2;
+  OldY:= FMandelbrot.Height div 2;
+
   FMandelBrot.SetSize(PaintBox1.Width, PaintBox1.Height);
+  Center(OldX, OldY);
   RefreshPicture();
 end;
 
@@ -124,8 +128,7 @@ procedure TForm1.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
 begin
   if (Button = mbLeft) then
   begin
-    FMandelBrot.SetPosToCenter(X, Y);
-    //FMandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
+    Center(X, Y);
     RefreshPicture();
   end;
 end;
@@ -135,17 +138,23 @@ begin
   PaintBox1.Canvas.Draw(0,0, FPicture);
 end;
 
-procedure TForm1.PaintMandelbrot();
+procedure TForm1.PaintMandelbrot;
 begin
   PaintBox1.Canvas.Draw(0, 0, FPicture);
 end;
 
+procedure TForm1.Center(const AX: Integer; const AY: Integer);
+begin
+  FMandelBrot.StartReal := FMandelBrot.StartReal + (AX - PaintBox1.Width / 2) / FMandelBrot.Zoom;
+  FMandelBrot.StartImagenary := FMandelBrot.StartImagenary + (AY - PaintBox1.Height / 2) / FMandelBrot.Zoom;
+end;
+
 procedure TForm1.UpdateStatus;
 begin
-  Statusbar1.SimpleText:= 'StartX: ' + FormatFloat('0.0##########', FMandelBrot.GetStartReal()) +
-                          '/ StartY: ' + FormatFloat('0.0##########', FMandelBrot.GetStartImagenary()) +
-                          '/ Zoom: ' + FormatFloat('0.0', FMandelBrot.GetZoom() / 200) + 'x' +
-                          '/ Iterations: ' + IntToStr(FMandelBrot.GetMaxIterations);
+  Statusbar1.SimpleText:= 'StartX: ' + FormatFloat('0.0##########', FMandelBrot.StartReal) +
+                          '/ StartY: ' + FormatFloat('0.0##########', FMandelBrot.StartImagenary) +
+                          '/ Zoom: ' + FormatFloat('0.0', FMandelBrot.Zoom / 200) + 'x' +
+                          '/ Iterations: ' + IntToStr(FMandelBrot.MaxIterations);
 end;
 
 procedure TForm1.RefreshPicture;
