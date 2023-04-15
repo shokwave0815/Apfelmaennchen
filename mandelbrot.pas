@@ -20,13 +20,13 @@ type
       FHeight: Integer;
       FMaxIterations: QWord;
       FZoom: QWord;
-      function Iterate(const x: Integer; const y: Integer): QWord;
-      function CalculateColor(const Iterations: QWord): TColor;
+      function Iterate(const AX: Integer; const AY: Integer): QWord;
+      function CalculateColor(const AIterations: QWord): TColor;
     public
       property Width: Integer read FWidth;
       property Height: Integer read FHeight;
-      property StartReal: Extended read FStartReal write FStartReal;
-      property StartImagenary: Extended read FStartImagenary write FStartImagenary;
+      property StartReal: Extended read FStartReal;
+      property StartImagenary: Extended read FStartImagenary;
       property Zoom: QWord read FZoom write FZoom;
       property MaxIterations: QWord read FMaxIterations write FMaxIterations;
       constructor Create(const AWidth: Integer; const AHeight: Integer; const AZoom: QWord; const AMaxIterations: QWord);
@@ -34,52 +34,50 @@ type
       procedure SetSize(const AWidth: Integer; const AHeight: Integer);
       procedure SetStartPoint(const AReal: Extended; const AImagenary: Extended);
       procedure ZoomInOrOut(const AFactor: Double);
-      procedure Calulate;
+      procedure Calulate; virtual;
       function GetBitmap: TBitmap;
   end;
 
 implementation
 
-function TMandelbrot.Iterate(const x: Integer; const y: Integer): QWord;
+function TMandelbrot.Iterate(const AX: Integer; const AY: Integer): QWord;
 var
-  xt: Extended;
-  zy: Extended;
-  zx: Extended;
-  cy: Extended;
-  cx: Extended;
+  Real: Extended;
+  Imagenary: Extended;
+  Temp: Extended;
+  ConstantReal: Extended;
+  ConstantImagenary: Extended;
 begin
-  zx := 0;
-  zy := 0;
-  Result := 0;
+  Real:= 0;
+  Imagenary:= 0;
+  Result:= 0;
 
-  cx:= FStartReal + x / FZoom;
-  cy:= FStartImagenary + y / FZoom;
+  ConstantReal:= FStartReal + AX / FZoom;
+  ConstantImagenary:= FStartImagenary + AY / FZoom;
 
-  while (Result < FMaxIterations) and ((zx * zx + zy * zy) < 4) do
+  while ((Result < FMaxIterations) and ((Sqr(Real) + Sqr(Imagenary)) < 4)) do
   begin
-    xt := zx * zy;
-    zx := zx * zx - zy * zy + cx;
-    zy := 2 * xt + cy;
+    Temp:= Real * Imagenary;
+    Real:= Sqr(Real) - Sqr(Imagenary) + ConstantReal;
+    Imagenary:= 2 * Temp + ConstantImagenary;
     inc(Result);
   end;
 end;
 
-function TMandelbrot.CalculateColor(const Iterations: QWord): TColor;
+function TMandelbrot.CalculateColor(const AIterations: QWord): TColor;
 var Hue, Saturation, Brightness, Divisor: Integer;
   NumIterations: QWord;
 begin
-  NumIterations:= Iterations;
+  NumIterations:= AIterations;
   Divisor:= 40;
   while NumIterations > 360 do
     Dec(NumIterations, 360);
 
   Hue:= NumIterations + 180;
-  //Hue:= (NumIterations div Divisor) * Divisor + 180;
   Saturation:= 255;
-  //Saturation:= NumIterations + 128;
   Saturation:= 255 - Trunc((NumIterations mod Divisor) * (255 / Divisor));
 
-  if Iterations = FMaxIterations then
+  if AIterations = FMaxIterations then
     Brightness := 0
   else
     Brightness:= 255;

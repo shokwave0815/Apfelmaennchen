@@ -12,19 +12,19 @@ const MyVersion = 'Apfelmännchen V1.0 ©2023 by shoKwave';
 
 type
 
-  { TForm1 }
+  { TFormMain }
 
-  TForm1 = class(TForm)
+  TFormMain = class(TForm)
     Button_SavePicture: TButton;
     Button_Repaint: TButton;
     Button_Zoom: TButton;
     Button_Out: TButton;
     FloatSpinEdit_Zoom: TFloatSpinEdit;
     Label_Calc: TLabel;
-    PaintBox1: TPaintBox;
-    Panel1: TPanel;
-    SaveDialog1: TSaveDialog;
-    StatusBar1: TStatusBar;
+    PaintBox: TPaintBox;
+    PanelHead: TPanel;
+    SaveDialog: TSaveDialog;
+    StatusBar: TStatusBar;
     procedure Button_OutClick(Sender: TObject);
     procedure Button_RepaintClick(Sender: TObject);
     procedure Button_SavePictureClick(Sender: TObject);
@@ -34,11 +34,11 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
+    procedure PaintBoxMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure PaintBox1Paint(Sender: TObject);
+    procedure PaintBoxPaint(Sender: TObject);
   private
-    FPicture: TBitmap;
+    FBufferImage: TBitmap;
     FMandelBrot: TMandelbrot;
     procedure Center(const AX: Integer; const AY: Integer);
     procedure PaintMandelbrot;
@@ -49,53 +49,53 @@ type
   end;
 
 var
-  Form1: TForm1;
+  FormMain: TFormMain;
 
 implementation
 
 {$R *.lfm}
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TFormMain.FormCreate(Sender: TObject);
 begin
   Caption:= MyVersion;
-  PaintBox1.Canvas.AntialiasingMode:= amOff;
+  PaintBox.Canvas.AntialiasingMode:= amOff;
 
-  FPicture:= TBitmap.Create;
-  FMandelBrot:= TMandelbrot.Create(PaintBox1.Width, PaintBox1.Height, 200, 360);
+  FBufferImage:= TBitmap.Create;
+  FMandelBrot:= TMandelbrot.Create(PaintBox.Width, PaintBox.Height, 200, 360);
   FMandelBrot.SetStartPoint(-2, -1.2);
   FMandelBrot.Calulate();
 end;
 
-procedure TForm1.Button_RepaintClick(Sender: TObject);
+procedure TFormMain.Button_RepaintClick(Sender: TObject);
 begin
   RefreshPicture();
 end;
 
-procedure TForm1.Button_SavePictureClick(Sender: TObject);
+procedure TFormMain.Button_SavePictureClick(Sender: TObject);
 begin
-  if (SaveDialog1.Execute) then
+  if (SaveDialog.Execute) then
   begin
-    FMandelBrot.GetBitmap().SaveToFile(SaveDialog1.FileName);
+    FMandelBrot.GetBitmap().SaveToFile(SaveDialog.FileName);
   end;
 end;
 
-procedure TForm1.Button_ZoomClick(Sender: TObject);
+procedure TFormMain.Button_ZoomClick(Sender: TObject);
 begin
   FMandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+procedure TFormMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  FreeAndNil(FPicture);
+  FreeAndNil(FBufferImage);
   FreeAndNil(FMandelBrot);
 end;
 
-procedure TForm1.Button_OutClick(Sender: TObject);
+procedure TFormMain.Button_OutClick(Sender: TObject);
 begin
   FMandelBrot.ZoomInOrOut(-1 * FloatSpinEdit_Zoom.Value);
 end;
 
-procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   case Key of
     VK_MULTIPLY: FMandelBrot.MaxIterations:= Round(FMandelBrot.MaxIterations * 1.2);
@@ -107,23 +107,23 @@ begin
   UpdateStatus();
 end;
 
-procedure TForm1.FormResize(Sender: TObject);
+procedure TFormMain.FormResize(Sender: TObject);
 var OldX, OldY: Integer;
 begin
   OldX:= FMandelBrot.Width div 2;
   OldY:= FMandelbrot.Height div 2;
 
-  FMandelBrot.SetSize(PaintBox1.Width, PaintBox1.Height);
+  FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
   Center(OldX, OldY);
   RefreshPicture();
 end;
 
-procedure TForm1.FormShow(Sender: TObject);
+procedure TFormMain.FormShow(Sender: TObject);
 begin
   RefreshPicture();
 end;
 
-procedure TForm1.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
+procedure TFormMain.PaintBoxMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   if (Button = mbLeft) then
@@ -133,31 +133,31 @@ begin
   end;
 end;
 
-procedure TForm1.PaintBox1Paint(Sender: TObject);
+procedure TFormMain.PaintBoxPaint(Sender: TObject);
 begin
-  PaintBox1.Canvas.Draw(0,0, FPicture);
+  PaintBox.Canvas.Draw(0,0, FBufferImage);
 end;
 
-procedure TForm1.PaintMandelbrot;
+procedure TFormMain.PaintMandelbrot;
 begin
-  PaintBox1.Canvas.Draw(0, 0, FPicture);
+  PaintBox.Canvas.Draw(0, 0, FBufferImage);
 end;
 
-procedure TForm1.Center(const AX: Integer; const AY: Integer);
+procedure TFormMain.Center(const AX: Integer; const AY: Integer);
 begin
-  FMandelBrot.StartReal := FMandelBrot.StartReal + (AX - PaintBox1.Width / 2) / FMandelBrot.Zoom;
-  FMandelBrot.StartImagenary := FMandelBrot.StartImagenary + (AY - PaintBox1.Height / 2) / FMandelBrot.Zoom;
+  FMandelBrot.SetStartPoint(FMandelBrot.StartReal + (AX - PaintBox.Width / 2) / FMandelBrot.Zoom,
+                            FMandelBrot.StartImagenary + (AY - PaintBox.Height / 2) / FMandelBrot.Zoom);
 end;
 
-procedure TForm1.UpdateStatus;
+procedure TFormMain.UpdateStatus;
 begin
-  Statusbar1.SimpleText:= 'StartX: ' + FormatFloat('0.0##########', FMandelBrot.StartReal) +
-                          '/ StartY: ' + FormatFloat('0.0##########', FMandelBrot.StartImagenary) +
-                          '/ Zoom: ' + FormatFloat('0.0', FMandelBrot.Zoom / 200) + 'x' +
-                          '/ Iterations: ' + IntToStr(FMandelBrot.MaxIterations);
+  StatusBar.SimpleText:= 'StartX: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartReal) +
+                          '/ StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) +
+                          '/ Zoom: ' + FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' +
+                          '/ Iterations: ' + FormatFloat('#,##0', FMandelBrot.MaxIterations * 1.0);
 end;
 
-procedure TForm1.RefreshPicture;
+procedure TFormMain.RefreshPicture;
 var   StartTime: Double;
 begin
   Label_Calc.caption:='calculating...';
@@ -166,11 +166,11 @@ begin
   StartTime:= GetTickCount64;
   FMandelBrot.Calulate();
 
-  FPicture.SetSize(PaintBox1.Width, PaintBox1.Height);
-  FPicture.Canvas.Draw(0, 0, FMandelBrot.GetBitmap());
+  FBufferImage.SetSize(PaintBox.Width, PaintBox.Height);
+  FBufferImage.Canvas.Draw(0, 0, FMandelBrot.GetBitmap());
   Label_Calc.Caption:='Rendertime: ' + FormatFloat('#,##0.0', (GetTickCount64 - StartTime) / 1000) + 's';
 
-  PaintBox1.Invalidate;
+  PaintBox.Invalidate;
 
 
   Label_Calc.Visible:=true;

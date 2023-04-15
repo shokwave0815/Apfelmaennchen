@@ -1,9 +1,9 @@
-object Form1: TForm1
+object FormMain: TFormMain
   Left = 352
   Height = 580
   Top = 34
   Width = 640
-  Caption = 'Form1'
+  Caption = 'FormMain'
   ClientHeight = 580
   ClientWidth = 640
   DesignTimePPI = 120
@@ -13,23 +13,23 @@ object Form1: TForm1
   OnKeyUp = FormKeyUp
   OnResize = FormResize
   OnShow = FormShow
-  object PaintBox1: TPaintBox
+  object PaintBox: TPaintBox
     Left = 0
     Height = 488
     Top = 63
     Width = 640
     Align = alClient
-    OnMouseUp = PaintBox1MouseUp
-    OnPaint = PaintBox1Paint
+    OnMouseUp = PaintBoxMouseUp
+    OnPaint = PaintBoxPaint
   end
-  object StatusBar1: TStatusBar
+  object StatusBar: TStatusBar
     Left = 0
     Height = 29
     Top = 551
     Width = 640
     Panels = <>
   end
-  object Panel1: TPanel
+  object PanelHead: TPanel
     Left = 0
     Height = 63
     Top = 0
@@ -98,10 +98,9 @@ object Form1: TForm1
       TabStop = False
     end
   end
-  object SaveDialog1: TSaveDialog
+  object SaveDialog: TSaveDialog
     DefaultExt = '.bmp'
     Filter = 'Bitmap(*.bmp)|*.bmp|All Files(*.*)|*.*'
-    InitialDir = '.'
     Left = 496
   end
 end
