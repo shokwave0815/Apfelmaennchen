@@ -10,7 +10,7 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, main, mandelbrot, inerface_mandelbrot
+  Forms, main, mandelbrot, inerface_mandelbrot, mandelbrotmt
   { you can add units after this };
 
 {$R *.res}
