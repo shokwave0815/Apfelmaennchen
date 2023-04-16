@@ -7,6 +7,12 @@ interface
 uses
   Classes, SysUtils, Graphics, GraphUtil;
 
+const COLOR_OFFSET = 0;
+      HUE_MAX = 360;
+      SATURATION_MAX = 255;
+      BRIGHTNESS_MAX = 255;
+      DIVISOR = 60;
+
 type
 
   { TMandelbrot }
@@ -65,22 +71,20 @@ begin
 end;
 
 function TMandelbrot.CalculateColor(const AIterations: QWord): TColor;
-var Hue, Saturation, Brightness, Divisor: Integer;
+var Hue, Saturation, Brightness: Integer;
   NumIterations: QWord;
 begin
   NumIterations:= AIterations;
-  Divisor:= 40;
-  while NumIterations > 360 do
-    Dec(NumIterations, 360);
+  while NumIterations > HUE_MAX do
+    Dec(NumIterations, HUE_MAX);
 
-  Hue:= NumIterations + 180;
-  Saturation:= 255;
-  Saturation:= 255 - Trunc((NumIterations mod Divisor) * (255 / Divisor));
+  Hue:= NumIterations + COLOR_OFFSET;
+  Saturation:= SATURATION_MAX - Trunc((NumIterations mod DIVISOR) * (SATURATION_MAX / DIVISOR));
 
   if AIterations = FMaxIterations then
     Brightness := 0
   else
-    Brightness:= 255;
+    Brightness:= BRIGHTNESS_MAX;
 
   Result := HSVRangeToColor(Hue, Saturation, Brightness);
 end;
