@@ -15,6 +15,8 @@ type
   { TFormMain }
 
   TFormMain = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
     Button_SavePicture: TButton;
     Button_Repaint: TButton;
     Button_Zoom: TButton;
@@ -25,6 +27,8 @@ type
     PanelHead: TPanel;
     SaveDialog: TSaveDialog;
     StatusBar: TStatusBar;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure Button_OutClick(Sender: TObject);
     procedure Button_RepaintClick(Sender: TObject);
     procedure Button_SavePictureClick(Sender: TObject);
@@ -82,6 +86,7 @@ end;
 procedure TFormMain.Button_ZoomClick(Sender: TObject);
 begin
   FMandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
+  UpdateStatus();
 end;
 
 procedure TFormMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -93,6 +98,19 @@ end;
 procedure TFormMain.Button_OutClick(Sender: TObject);
 begin
   FMandelBrot.ZoomInOrOut(-1 * FloatSpinEdit_Zoom.Value);
+  UpdateStatus();
+end;
+
+procedure TFormMain.Button1Click(Sender: TObject);
+begin
+  FMandelBrot.MaxIterations:= Round(FMandelBrot.MaxIterations * 1.2);
+  UpdateStatus();
+end;
+
+procedure TFormMain.Button2Click(Sender: TObject);
+begin
+  FMandelBrot.MaxIterations:= Round(FMandelBrot.MaxIterations / 1.2);
+  UpdateStatus();
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
