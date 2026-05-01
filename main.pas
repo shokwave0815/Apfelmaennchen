@@ -15,8 +15,8 @@ type
   { TFormMain }
 
   TFormMain = class(TForm)
-    Button1: TButton;
-    Button2: TButton;
+    Btn_IncIterations: TButton;
+    Btn_DecIterations: TButton;
     Button_SavePicture: TButton;
     Button_Repaint: TButton;
     Button_Zoom: TButton;
@@ -27,8 +27,8 @@ type
     PanelHead: TPanel;
     SaveDialog: TSaveDialog;
     StatusBar: TStatusBar;
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
+    procedure Btn_IncIterationsClick(Sender: TObject);
+    procedure Btn_DecIterationsClick(Sender: TObject);
     procedure Button_OutClick(Sender: TObject);
     procedure Button_RepaintClick(Sender: TObject);
     procedure Button_SavePictureClick(Sender: TObject);
@@ -101,13 +101,13 @@ begin
   UpdateStatus();
 end;
 
-procedure TFormMain.Button1Click(Sender: TObject);
+procedure TFormMain.Btn_IncIterationsClick(Sender: TObject);
 begin
   FMandelBrot.MaxIterations:= Round(FMandelBrot.MaxIterations * 1.2);
   UpdateStatus();
 end;
 
-procedure TFormMain.Button2Click(Sender: TObject);
+procedure TFormMain.Btn_DecIterationsClick(Sender: TObject);
 begin
   FMandelBrot.MaxIterations:= Round(FMandelBrot.MaxIterations / 1.2);
   UpdateStatus();
@@ -147,8 +147,15 @@ begin
   if (Button = mbLeft) then
   begin
     Center(X, Y);
-    RefreshPicture();
-  end;
+    FMandelbrot.MaxIterations:= round(FMandelbrot.MaxIterations * 1.05);
+    FMandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
+  end else
+    if (Button = mbRight) then
+    begin
+      FMandelbrot.MaxIterations:= round(FMandelbrot.MaxIterations / 1.05);
+      FMandelBrot.ZoomInOrOut(-1 * FloatSpinEdit_Zoom.Value);
+    end;
+  RefreshPicture();
 end;
 
 procedure TFormMain.PaintBoxPaint(Sender: TObject);

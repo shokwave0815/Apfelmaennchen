@@ -1,52 +1,53 @@
 object FormMain: TFormMain
   Left = 352
-  Height = 696
+  Height = 512
   Top = 34
-  Width = 768
+  Width = 512
   Caption = 'FormMain'
-  ClientHeight = 696
-  ClientWidth = 768
-  DesignTimePPI = 144
+  ClientHeight = 512
+  ClientWidth = 512
   KeyPreview = True
+  LCLVersion = '4.99.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
   OnResize = FormResize
   OnShow = FormShow
   object PaintBox: TPaintBox
+    Cursor = crCross
     Left = 0
-    Height = 584
-    Top = 76
-    Width = 768
+    Height = 395
+    Top = 51
+    Width = 512
     Align = alClient
     OnMouseUp = PaintBoxMouseUp
     OnPaint = PaintBoxPaint
   end
   object StatusBar: TStatusBar
     Left = 0
-    Height = 36
-    Top = 660
-    Width = 768
+    Height = 18
+    Top = 446
+    Width = 512
     Panels = <>
   end
   object PanelHead: TPanel
     Left = 0
-    Height = 76
+    Height = 51
     Top = 0
-    Width = 768
+    Width = 512
     Align = alTop
-    ClientHeight = 76
-    ClientWidth = 768
+    ClientHeight = 51
+    ClientWidth = 512
     TabOrder = 1
     object Button_Zoom: TButton
       AnchorSideLeft.Control = PanelHead
       AnchorSideTop.Control = PanelHead
-      Left = 7
-      Height = 37
-      Top = 7
-      Width = 113
-      BorderSpacing.Left = 6
-      BorderSpacing.Top = 6
+      Left = 5
+      Height = 24
+      Top = 5
+      Width = 75
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 4
       Caption = 'Zoom In'
       TabOrder = 1
       TabStop = False
@@ -56,11 +57,11 @@ object FormMain: TFormMain
       AnchorSideLeft.Control = Button_Zoom
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Button_Zoom
-      Left = 132
-      Height = 37
-      Top = 7
-      Width = 113
-      BorderSpacing.Left = 12
+      Left = 88
+      Height = 24
+      Top = 5
+      Width = 75
+      BorderSpacing.Left = 8
       Caption = 'Zoom Out'
       TabOrder = 2
       TabStop = False
@@ -70,24 +71,24 @@ object FormMain: TFormMain
       AnchorSideLeft.Control = Button_Out
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Button_Out
-      Left = 257
-      Height = 33
-      Top = 7
-      Width = 106
-      BorderSpacing.Left = 12
+      Left = 171
+      Height = 21
+      Top = 5
+      Width = 71
+      BorderSpacing.Left = 8
       TabStop = False
       TabOrder = 0
-      Value = 1.2
+      Value = 2
     end
     object Button_Repaint: TButton
       AnchorSideLeft.Control = FloatSpinEdit_Zoom
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = FloatSpinEdit_Zoom
-      Left = 375
-      Height = 37
-      Top = 7
-      Width = 113
-      BorderSpacing.Left = 12
+      Left = 250
+      Height = 24
+      Top = 5
+      Width = 75
+      BorderSpacing.Left = 8
       Caption = 'Repaint'
       TabOrder = 3
       TabStop = False
@@ -99,14 +100,14 @@ object FormMain: TFormMain
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = PanelHead
       AnchorSideBottom.Side = asrBottom
-      Left = 7
-      Height = 25
-      Top = 44
-      Width = 98
+      Left = 5
+      Height = 16
+      Top = 30
+      Width = 79
       Anchors = [akLeft, akBottom]
-      BorderSpacing.Left = 6
-      BorderSpacing.Right = 6
-      BorderSpacing.Bottom = 6
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      BorderSpacing.Bottom = 4
       Caption = 'Calculating...'
       ParentColor = False
       Visible = False
@@ -115,39 +116,39 @@ object FormMain: TFormMain
       AnchorSideTop.Control = Button_Repaint
       AnchorSideRight.Control = PanelHead
       AnchorSideRight.Side = asrBottom
-      Left = 648
-      Height = 37
-      Top = 7
-      Width = 113
+      Left = 432
+      Height = 24
+      Top = 5
+      Width = 75
       Anchors = [akTop, akRight]
-      BorderSpacing.Right = 6
+      BorderSpacing.Right = 4
       Caption = 'Save Picture'
       TabOrder = 4
       TabStop = False
       OnClick = Button_SavePictureClick
     end
-    object Button1: TButton
-      Left = 509
-      Height = 38
-      Top = 9
-      Width = 50
+    object Btn_IncIterations: TButton
+      Left = 339
+      Height = 25
+      Top = 6
+      Width = 34
       Caption = 'Iter+'
       TabOrder = 5
-      OnClick = Button1Click
+      OnClick = Btn_IncIterationsClick
     end
   end
-  object Button2: TButton
-    Left = 568
-    Height = 38
-    Top = 8
-    Width = 50
+  object Btn_DecIterations: TButton
+    Left = 379
+    Height = 26
+    Top = 5
+    Width = 33
     Caption = 'Iter-'
     TabOrder = 2
-    OnClick = Button2Click
+    OnClick = Btn_DecIterationsClick
   end
   object SaveDialog: TSaveDialog
     DefaultExt = '.bmp'
     Filter = 'Bitmap(*.bmp)|*.bmp|All Files(*.*)|*.*'
-    Left = 595
+    Left = 397
   end
 end

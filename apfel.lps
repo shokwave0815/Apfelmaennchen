@@ -2,76 +2,51 @@
 <CONFIG>
   <ProjectSession>
     <PathDelim Value="\"/>
-    <Version Value="12"/>
+    <Version Value="13"/>
     <BuildModes Active="Release"/>
     <Units>
       <Unit>
         <Filename Value="apfel.lpr"/>
-        <IsPartOfProject Value="True"/>
+        <Loaded Value="True"/>
+        <UsageCount Value="267"/>
         <EditorIndex Value="4"/>
         <CursorPos Y="24"/>
-        <UsageCount Value="177"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="main.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="FormMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <CursorPos X="56" Y="92"/>
-        <UsageCount Value="177"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
+        <UsageCount Value="267"/>
+        <TopLine Value="137"/>
+        <CursorPos Y="156"/>
       </Unit>
       <Unit>
         <Filename Value="mandelbrot.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
-        <CursorPos X="3" Y="133"/>
-        <UsageCount Value="177"/>
         <Loaded Value="True"/>
+        <UsageCount Value="267"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <CursorPos Y="59"/>
       </Unit>
       <Unit>
         <Filename Value="inerface_mandelbrot.pas"/>
-        <IsPartOfProject Value="True"/>
+        <Loaded Value="True"/>
+        <UsageCount Value="223"/>
         <EditorIndex Value="3"/>
         <CursorPos X="17" Y="11"/>
-        <UsageCount Value="133"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="mandelbrotmt.pas"/>
-        <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="6"/>
-        <CursorPos Y="26"/>
-        <UsageCount Value="23"/>
         <Loaded Value="True"/>
+        <UsageCount Value="113"/>
+        <EditorIndex Value="2"/>
+        <CursorPos Y="26"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="28">
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="80" Column="45" TopLine="68"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="78" Column="32" TopLine="68"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="104" Column="43" TopLine="83"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="132" Column="18" TopLine="115"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrot.pas"/>
-        <Caret Line="29" Column="30" TopLine="18"/>
-      </Position>
+    <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="mandelbrot.pas"/>
         <Caret Line="30" TopLine="19"/>
@@ -167,6 +142,30 @@
       <Position>
         <Filename Value="main.pas"/>
         <Caret Line="104" Column="3" TopLine="98"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="92" Column="56" TopLine="67"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="147" Column="3" TopLine="69"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="88" Column="3" TopLine="69"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="155" Column="36" TopLine="136"/>
+      </Position>
+      <Position>
+        <Filename Value="mandelbrot.pas"/>
+        <Caret Line="59" TopLine="50"/>
+      </Position>
+      <Position>
+        <Filename Value="mandelbrot.pas"/>
+        <Caret Line="60" TopLine="50"/>
       </Position>
     </JumpHistory>
     <RunParams>
