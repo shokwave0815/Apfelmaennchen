@@ -1,3 +1,4 @@
+//Dummy
 unit inerface_mandelbrot;
 
 {$mode ObjFPC}{$H+}
