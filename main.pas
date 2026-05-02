@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, LCLType, ComCtrls, Spin, mandelbrot;
 
-const MyVersion = 'Apfelmännchen V1.0 ©2023 by shoKwave';
+const MyVersion = 'Apfelmännchen V1.01 ©2026 by shoKwave';
 
 type
 
