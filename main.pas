@@ -65,7 +65,7 @@ begin
   PaintBox.Canvas.AntialiasingMode:= amOff;
 
   FBufferImage:= TBitmap.Create;
-  FMandelBrot:= TMandelbrot.Create(PaintBox.Width, PaintBox.Height, 200, 360);
+  FMandelBrot:= TMandelbrot.Create(0, PaintBox.Width, PaintBox.Height, 200, 360);
   FMandelBrot.SetStartPoint(-2, -1.2);
   FMandelBrot.Calulate();
 end;
