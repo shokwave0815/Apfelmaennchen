@@ -23,7 +23,6 @@ type
     FBitmap: TBitmap;
     FStartReal: extended;
     FStartImagenary: extended;
-    FLeft: integer;
     FWidth: integer;
     FHeight: integer;
     FMaxIterations: QWord;
@@ -31,15 +30,14 @@ type
     function Iterate(const AX: integer; const AY: integer): QWord;
     function CalculateColor(const AIterations: QWord): TColor;
   public
-    property Left: integer read FLeft;
     property Width: integer read FWidth;
     property Height: integer read FHeight;
     property StartReal: extended read FStartReal;
     property StartImagenary: extended read FStartImagenary;
     property Zoom: QWord read FZoom write FZoom;
     property MaxIterations: QWord read FMaxIterations write FMaxIterations;
-    constructor Create(const ALeft: integer; const AWidth: integer; const AHeight: integer; const AZoom: QWord;
-      const AMaxIterations: QWord);
+    constructor Create(const AWidth: integer; const AHeight: integer;
+      const AZoom: QWord; const AMaxIterations: QWord);
     destructor Destroy; override;
     procedure SetSize(const AWidth: integer; const AHeight: integer);
     procedure SetStartPoint(const AReal: extended; const AImagenary: extended);
@@ -52,24 +50,24 @@ implementation
 
 function TMandelbrot.Iterate(const AX: integer; const AY: integer): QWord;
 var
-  real: extended;
-  Imagenary: extended;
+  VariableReal: extended;
+  VariableImagenary: extended;
   Temp: extended;
   ConstantReal: extended;
   ConstantImagenary: extended;
 begin
-  real := 0;
-  Imagenary := 0;
+  VariableReal := 0;
+  VariableImagenary := 0;
   Result := 0;
 
   ConstantReal := FStartReal + AX / FZoom;
   ConstantImagenary := FStartImagenary + AY / FZoom;
 
-  while ((Result < FMaxIterations) and ((Sqr(real) + Sqr(Imagenary)) < 4)) do
+  while (Result < FMaxIterations) and (Sqr(VariableReal) + Sqr(VariableImagenary) < 4) do
   begin
-    Temp := real * Imagenary;
-    real := Sqr(real) - Sqr(Imagenary) + ConstantReal;
-    Imagenary := 2 * Temp + ConstantImagenary;
+    Temp := VariableReal * VariableImagenary;
+    VariableReal := Sqr(VariableReal) - Sqr(VariableImagenary) + ConstantReal;
+    VariableImagenary := 2 * Temp + ConstantImagenary;
     Result += 1;
   end;
 end;
@@ -94,12 +92,11 @@ begin
   Result := HSVRangeToColor(Hue, Saturation, Brightness);
 end;
 
-constructor TMandelbrot.Create(const ALeft: integer; const AWidth: integer;
-  const AHeight: integer; const AZoom: QWord; const AMaxIterations: QWord);
+constructor TMandelbrot.Create(const AWidth: integer; const AHeight: integer;
+  const AZoom: QWord; const AMaxIterations: QWord);
 begin
   inherited Create();
 
-  FLeft := ALeft;
   FWidth := AWidth;
   FHeight := AHeight;
   FZoom := AZoom;
