@@ -9,6 +9,8 @@ uses
 
 type
 
+  TOnFinishCalculation = procedure(ABitmap: TBitmap) of object;
+
   { TMandelbrotMT }
 
   TMandelbrotMT = class(TObject)
@@ -16,22 +18,24 @@ type
     FBitmap: TBitmap;
     FStartReal: extended;
     FStartImagenary: extended;
-    FOffsetX: integer;
     FWidth: integer;
     FHeight: integer;
     FMaxIterations: QWord;
     FZoom: QWord;
+    FOnFinishCalculation: TOnFinishCalculation;
     procedure FOnExitThread(AMandelbrot: TMandelbrot);
+        procedure CallOnFinishCalculation;
+
   public
-    property OffsetX: integer read FOffsetX;
     property Width: integer read FWidth;
     property Height: integer read FHeight;
     property StartReal: extended read FStartReal;
     property StartImagenary: extended read FStartImagenary;
     property Zoom: QWord read FZoom write FZoom;
     property MaxIterations: QWord read FMaxIterations write FMaxIterations;
-    constructor Create(const AOffsetX: integer; const AWidth: integer; const AHeight: integer;
-      const AZoom: QWord; const AMaxIterations: QWord);
+    property OnFinishCalculation: TOnFinishCalculation read FOnFinishCalculation write FOnFinishCalculation;
+    constructor Create(const AWidth: integer; const AHeight: integer; const AZoom: QWord;
+      const AMaxIterations: QWord);
     destructor Destroy; override;
     procedure SetSize(const AWidth: integer; const AHeight: integer);
     procedure SetStartPoint(const AReal: extended; const AImagenary: extended);
@@ -44,17 +48,26 @@ implementation
 
 procedure TMandelbrotMT.FOnExitThread(AMandelbrot: TMandelbrot);
 begin
-  FBitmap := AMandelbrot.GetBitmap;  // ToDo: Just paint the part calculated by the tread.
+  FBitmap.Canvas.Draw(0, 0, AMandelbrot.GetBitmap);// ToDo: Just paint the part calculated by the tread.
   FreeAndNil(AMandelbrot);
+  CallOnFinishCalculation;
   //ToDo: Decrement number of running threads and if all finished call repaint of the Paintbox.
 end;
 
-constructor TMandelbrotMT.Create(const AOffsetX: integer; const AWidth: integer; const AHeight: integer;
-  const AZoom: QWord; const AMaxIterations: QWord);
+procedure TMandelbrotMT.CallOnFinishCalculation;
+begin
+    if Assigned(FOnFinishCalculation) then
+  begin
+    FOnFinishCalculation(FBitmap);
+  end;
+
+end;
+
+constructor TMandelbrotMT.Create(const AWidth: integer; const AHeight: integer; const AZoom: QWord;
+  const AMaxIterations: QWord);
 begin
   inherited Create();
 
-  FOffsetX := AOffsetX;
   FWidth := AWidth;
   FHeight := AHeight;
   FZoom := AZoom;
@@ -112,9 +125,10 @@ var
   PartMB: TMandelbrot;
 begin
   //ToDo: Implement the threads creation.
-  PartMB := TMandelbrot.Create(FWidth, FHeight, FZoom, FMaxIterations);
-  mbThread := TMBThread.Create(true, PartMB);
-  mbThread.OnFinish:= @FOnExitThread;
+  PartMB := TMandelbrot.Create(0, FWidth, FHeight, FZoom, FMaxIterations);
+  PartMB.SetStartPoint(FStartReal, FStartImagenary);
+  mbThread := TMBThread.Create(True, PartMB);
+  mbThread.OnFinish := @FOnExitThread;
   mbThread.Start;
 end;
 

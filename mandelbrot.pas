@@ -23,6 +23,7 @@ type
     FBitmap: TBitmap;
     FStartReal: extended;
     FStartImagenary: extended;
+    FOffsetX: integer;
     FWidth: integer;
     FHeight: integer;
     FMaxIterations: QWord;
@@ -30,13 +31,14 @@ type
     function Iterate(const AX: integer; const AY: integer): QWord;
     function CalculateColor(const AIterations: QWord): TColor;
   public
+    property OffsetX: integer read FOffsetX;
     property Width: integer read FWidth;
     property Height: integer read FHeight;
     property StartReal: extended read FStartReal;
     property StartImagenary: extended read FStartImagenary;
     property Zoom: QWord read FZoom write FZoom;
     property MaxIterations: QWord read FMaxIterations write FMaxIterations;
-    constructor Create(const AWidth: integer; const AHeight: integer;
+    constructor Create(const AOffsetX: integer; const AWidth: integer; const AHeight: integer;
       const AZoom: QWord; const AMaxIterations: QWord);
     destructor Destroy; override;
     procedure SetSize(const AWidth: integer; const AHeight: integer);
@@ -92,11 +94,12 @@ begin
   Result := HSVRangeToColor(Hue, Saturation, Brightness);
 end;
 
-constructor TMandelbrot.Create(const AWidth: integer; const AHeight: integer;
-  const AZoom: QWord; const AMaxIterations: QWord);
+constructor TMandelbrot.Create(const AOffsetX: integer; const AWidth: integer;
+  const AHeight: integer; const AZoom: QWord; const AMaxIterations: QWord);
 begin
   inherited Create();
 
+  FOffsetX := AOffsetX;
   FWidth := AWidth;
   FHeight := AHeight;
   FZoom := AZoom;

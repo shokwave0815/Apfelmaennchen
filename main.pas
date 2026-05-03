@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, LCLType, ComCtrls, Spin, mandelbrot;
+  StdCtrls, LCLType, ComCtrls, Spin, mandelbrotmt;
 
 const
   MyVersion = 'Apfelmännchen V1.01 ©2026 by shoKwave';
@@ -42,10 +42,12 @@ type
     procedure PaintBoxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure PaintBoxPaint(Sender: TObject);
   private
+    FStartTime: double;
+
     FBufferImage: TBitmap;
-    FMandelBrot: TMandelbrot;
+    FMandelBrot: TMandelbrotMT;
     procedure Center(const AX: integer; const AY: integer);
-    procedure PaintMandelbrot;
+    procedure PaintMandelbrot(ABitmap: TBitmap);
     procedure UpdateStatus;
     procedure RefreshPicture;
   public
@@ -65,7 +67,8 @@ begin
   PaintBox.Canvas.AntialiasingMode := amOff;
 
   FBufferImage := TBitmap.Create;
-  FMandelBrot := TMandelbrot.Create(PaintBox.Width, PaintBox.Height, 200, 360);
+  FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360);
+  FMandelbrot.OnFinishCalculation := @PaintMandelbrot;
   FMandelBrot.SetStartPoint(-2, -1.2);
   FMandelBrot.Calulate();
 end;
@@ -162,9 +165,19 @@ begin
   PaintBox.Canvas.Draw(0, 0, FBufferImage);
 end;
 
-procedure TForm_Main.PaintMandelbrot;
+procedure TForm_Main.PaintMandelbrot(ABitmap: TBitmap);
 begin
-  PaintBox.Canvas.Draw(0, 0, FBufferImage);
+  PaintBox.Canvas.Draw(0, 0, ABitmap);
+
+  FBufferImage.SetSize(PaintBox.Width, PaintBox.Height);
+  FBufferImage.Canvas.Draw(0, 0, FMandelBrot.GetBitmap());
+  Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0', (GetTickCount64 - FStartTime) / 1000) + 's';
+
+  PaintBox.Invalidate;
+
+  Label_Calc.Visible := True;
+  UpdateStatus();
+
 end;
 
 procedure TForm_Main.Center(const AX: integer; const AY: integer);
@@ -176,29 +189,19 @@ end;
 procedure TForm_Main.UpdateStatus;
 begin
   StatusBar.SimpleText := 'StartX: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartReal) +
-    '/ StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) +
-    '/ Zoom: ' + FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' +
-    '/ Iterations: ' + FormatFloat('#,##0', FMandelBrot.MaxIterations * 1.0);
+    '/ StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) + '/ Zoom: ' +
+    FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' + '/ Iterations: ' +
+    FormatFloat('#,##0', FMandelBrot.MaxIterations * 1.0);
 end;
 
 procedure TForm_Main.RefreshPicture;
-var
-  StartTime: double;
 begin
   Label_Calc.Caption := 'calculating...';
   Application.ProcessMessages;
 
-  StartTime := GetTickCount64;
+  FStartTime := GetTickCount64;
   FMandelBrot.Calulate();
 
-  FBufferImage.SetSize(PaintBox.Width, PaintBox.Height);
-  FBufferImage.Canvas.Draw(0, 0, FMandelBrot.GetBitmap());
-  Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0', (GetTickCount64 - StartTime) / 1000) + 's';
-
-  PaintBox.Invalidate;
-
-  Label_Calc.Visible := True;
-  UpdateStatus();
 end;
 
 end.
