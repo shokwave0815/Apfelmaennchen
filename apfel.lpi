@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="13"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
       <SessionStorage Value="InProjectDir"/>
@@ -62,22 +62,8 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="apfel.lpr"/>
-      </Unit>
-      <Unit>
-        <Filename Value="main.pas"/>
-        <ComponentName Value="FormMain"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mandelbrot.pas"/>
-      </Unit>
-      <Unit>
-        <Filename Value="inerface_mandelbrot.pas"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mandelbrotmt.pas"/>
+        <Filename Value="mandelbrotthread.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit>
     </Units>
   </ProjectOptions>

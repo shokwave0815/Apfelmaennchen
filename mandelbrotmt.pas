@@ -5,7 +5,7 @@ unit mandelbrotmt;
 interface
 
 uses
-  Classes, SysUtils, Graphics;
+  Classes, SysUtils, Graphics, mandelbrot, mandelbrotthread;
 
 type
 
@@ -21,6 +21,7 @@ type
     FHeight: integer;
     FMaxIterations: QWord;
     FZoom: QWord;
+    procedure FOnExitThread(AMandelbrot: TMandelbrot);
   public
     property OffsetX: integer read FOffsetX;
     property Width: integer read FWidth;
@@ -40,6 +41,13 @@ type
   end;
 
 implementation
+
+procedure TMandelbrotMT.FOnExitThread(AMandelbrot: TMandelbrot);
+begin
+  FBitmap := AMandelbrot.GetBitmap;  // ToDo: Just paint the part calculated by the tread.
+  FreeAndNil(AMandelbrot);
+  //ToDo: Decrement number of running threads and if all finished call repaint of the Paintbox.
+end;
 
 constructor TMandelbrotMT.Create(const AOffsetX: integer; const AWidth: integer; const AHeight: integer;
   const AZoom: QWord; const AMaxIterations: QWord);
@@ -99,8 +107,15 @@ begin
 end;
 
 procedure TMandelbrotMT.Calulate;
+var
+  mbThread: TMBThread;
+  PartMB: TMandelbrot;
 begin
   //ToDo: Implement the threads creation.
+  PartMB := TMandelbrot.Create(FWidth, FHeight, FZoom, FMaxIterations);
+  mbThread := TMBThread.Create(true, PartMB);
+  mbThread.OnFinish:= @FOnExitThread;
+  mbThread.Start;
 end;
 
 function TMandelbrotMT.GetBitmap: TBitmap;
