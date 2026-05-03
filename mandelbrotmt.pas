@@ -23,9 +23,10 @@ type
     FMaxIterations: QWord;
     FZoom: QWord;
     FOnFinishCalculation: TOnFinishCalculation;
+    FNumRunningThreads: integer;
+    FNumMaxThreads: integer;
     procedure FOnExitThread(AMandelbrot: TMandelbrot);
-        procedure CallOnFinishCalculation;
-
+    procedure CallOnFinishCalculation;
   public
     property Width: integer read FWidth;
     property Height: integer read FHeight;
@@ -47,20 +48,26 @@ type
 implementation
 
 procedure TMandelbrotMT.FOnExitThread(AMandelbrot: TMandelbrot);
+var
+  offset: integer;
 begin
-  FBitmap.Canvas.Draw(0, 0, AMandelbrot.GetBitmap);// ToDo: Just paint the part calculated by the tread.
+  offset := AMandelbrot.OffsetX * (FWidth div FNumMaxThreads);
+  FBitmap.Canvas.Draw(offset, 0, AMandelbrot.GetBitmap);// ToDo: Just paint the part calculated by the tread.
   FreeAndNil(AMandelbrot);
-  CallOnFinishCalculation;
   //ToDo: Decrement number of running threads and if all finished call repaint of the Paintbox.
+  FNumRunningThreads -= 1;
+  if FNumRunningThreads = 0 then
+  begin
+    CallOnFinishCalculation;
+  end;
 end;
 
 procedure TMandelbrotMT.CallOnFinishCalculation;
 begin
-    if Assigned(FOnFinishCalculation) then
+  if Assigned(FOnFinishCalculation) then
   begin
     FOnFinishCalculation(FBitmap);
   end;
-
 end;
 
 constructor TMandelbrotMT.Create(const AWidth: integer; const AHeight: integer; const AZoom: QWord;
@@ -76,6 +83,9 @@ begin
   FBitmap := TBitmap.Create;
   FBitmap.SetSize(FWidth, FHeight);
   FBitmap.Clear;
+
+  FNumMaxThreads := 2;
+  FNumRunningThreads := 0;
 end;
 
 destructor TMandelbrotMT.Destroy;
@@ -123,13 +133,24 @@ procedure TMandelbrotMT.Calulate;
 var
   mbThread: TMBThread;
   PartMB: TMandelbrot;
+  i: integer;
 begin
   //ToDo: Implement the threads creation.
-  PartMB := TMandelbrot.Create(0, FWidth, FHeight, FZoom, FMaxIterations);
-  PartMB.SetStartPoint(FStartReal, FStartImagenary);
-  mbThread := TMBThread.Create(True, PartMB);
-  mbThread.OnFinish := @FOnExitThread;
-  mbThread.Start;
+  for i := 0 to FNumMaxThreads - 1 do
+  begin
+    PartMB := TMandelbrot.Create(i, FWidth div FNumMaxThreads, FHeight, FZoom, FMaxIterations);
+    PartMB.SetStartPoint(FStartReal + i * ((FWidth div FNumMaxThreads) / FZoom), FStartImagenary);
+    mbThread := TMBThread.Create(True, PartMB);
+
+    //Check if creation failed.
+    if Assigned(mbThread.FatalException) then
+      raise mbThread.FatalException;
+
+    mbThread.OnFinish := @FOnExitThread;
+    FNumRunningThreads += 1;
+    mbThread.Start;
+
+  end;
 end;
 
 function TMandelbrotMT.GetBitmap: TBitmap;
