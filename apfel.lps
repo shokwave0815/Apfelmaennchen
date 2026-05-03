@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="12"/>
-    <BuildModes Active="Debug"/>
+    <BuildModes Active="Release"/>
     <Units>
       <Unit>
         <Filename Value="apfel.lpr"/>
@@ -18,8 +18,9 @@
         <ComponentName Value="Form_Main"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="157"/>
-        <CursorPos X="3" Y="172"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="162"/>
+        <CursorPos X="159" Y="173"/>
         <UsageCount Value="267"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -41,10 +42,9 @@
       </Unit>
       <Unit>
         <Filename Value="mandelbrotmt.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="70"/>
-        <CursorPos X="22" Y="87"/>
+        <TopLine Value="22"/>
+        <CursorPos X="53" Y="31"/>
         <UsageCount Value="121"/>
         <Loaded Value="True"/>
       </Unit>
@@ -54,7 +54,7 @@
         <EditorIndex Value="2"/>
         <TopLine Value="14"/>
         <CursorPos Y="39"/>
-        <UsageCount Value="23"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>

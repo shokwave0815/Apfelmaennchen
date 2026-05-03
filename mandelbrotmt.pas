@@ -28,6 +28,7 @@ type
     procedure FOnExitThread(AMandelbrot: TMandelbrot);
     procedure CallOnFinishCalculation;
   public
+    property NumThreads: integer read FNumMaxThreads;
     property Width: integer read FWidth;
     property Height: integer read FHeight;
     property StartReal: extended read FStartReal;
@@ -84,7 +85,7 @@ begin
   FBitmap.SetSize(FWidth, FHeight);
   FBitmap.Clear;
 
-  FNumMaxThreads := 2;
+  FNumMaxThreads := TThread.ProcessorCount;
   FNumRunningThreads := 0;
 end;
 
