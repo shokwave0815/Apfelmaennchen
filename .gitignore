@@ -27,7 +27,7 @@
 #
 
 # Linux / macOS binaries
-[^\.]*
+#[^\.]*
 *.app
 
 # Delphi compiler-generated binaries (safe to delete)

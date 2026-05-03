@@ -18,7 +18,6 @@
         <ComponentName Value="Form_Main"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="162"/>
         <CursorPos X="159" Y="173"/>
         <UsageCount Value="267"/>
@@ -51,9 +50,10 @@
       <Unit>
         <Filename Value="mandelbrotthread.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="14"/>
-        <CursorPos Y="39"/>
+        <CursorPos X="34" Y="33"/>
         <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit>
