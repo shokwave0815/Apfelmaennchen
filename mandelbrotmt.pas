@@ -87,6 +87,9 @@ begin
 
 //  FNumMaxThreads := TThread.ProcessorCount;
   FNumMaxThreads := TLogicalCPUCount.GetLogicalCPUCount();
+  {$ifdef DARWIN}
+  FNumMaxThreads := 10;
+  {$endif DARWIN}
   FNumRunningThreads := 0;
 end;
 

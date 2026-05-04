@@ -51,7 +51,7 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="71"/>
-        <CursorPos X="57" Y="89"/>
+        <CursorPos X="23" Y="91"/>
       </Unit>
       <Unit>
         <Filename Value="ulogicalcpucount.pas"/>
@@ -59,8 +59,7 @@
         <Loaded Value="True"/>
         <UsageCount Value="21"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="31"/>
-        <CursorPos Y="52"/>
+        <CursorPos X="33" Y="60"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
