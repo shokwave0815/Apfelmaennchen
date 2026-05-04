@@ -10,7 +10,8 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, main, mandelbrot, inerface_mandelbrot, mandelbrotmt, mandelbrotthread
+  Forms, main, mandelbrot, inerface_mandelbrot, mandelbrotmt, mandelbrotthread,
+  ULogicalCPUCount
   { you can add units after this };
 
 {$R *.res}

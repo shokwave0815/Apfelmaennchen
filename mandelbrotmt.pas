@@ -5,7 +5,7 @@ unit mandelbrotmt;
 interface
 
 uses
-  Classes, SysUtils, Graphics, mandelbrot, mandelbrotthread;
+  Classes, SysUtils, Graphics, mandelbrot, mandelbrotthread, ULogicalCPUCount;
 
 type
 
@@ -85,7 +85,8 @@ begin
   FBitmap.SetSize(FWidth, FHeight);
   FBitmap.Clear;
 
-  FNumMaxThreads := TThread.ProcessorCount;
+//  FNumMaxThreads := TThread.ProcessorCount;
+  FNumMaxThreads := TLogicalCPUCount.GetLogicalCPUCount();
   FNumRunningThreads := 0;
 end;
 
