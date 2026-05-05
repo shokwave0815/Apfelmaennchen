@@ -26,9 +26,10 @@
 #*.obj
 #
 
-# Linux / macOS binaries
-#[^\.]*
+# macOS
+#[^\.]* 
 *.app
+DS_Store
 
 # Delphi compiler-generated binaries (safe to delete)
 *.exe
@@ -84,3 +85,7 @@ lib/
 *.exe
 *.dbg
 *.bmp
+
+#session information
+*.lps
+
