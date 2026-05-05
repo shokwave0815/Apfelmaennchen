@@ -53,9 +53,9 @@ var
   offset: integer;
 begin
   offset := AMandelbrot.OffsetX * (FWidth div FNumMaxThreads);
-  FBitmap.Canvas.Draw(offset, 0, AMandelbrot.GetBitmap);// ToDo: Just paint the part calculated by the tread.
+  FBitmap.Canvas.Draw(offset, 0, AMandelbrot.GetBitmap);// Just paint the part calculated by the tread.
   FreeAndNil(AMandelbrot);
-  //ToDo: Decrement number of running threads and if all finished call repaint of the Paintbox.
+  //Decrement number of running threads and if all finished call repaint of the Paintbox.
   FNumRunningThreads -= 1;
   if FNumRunningThreads = 0 then
   begin
@@ -140,10 +140,14 @@ var
   PartMB: TMandelbrot;
   i: integer;
 begin
-  //ToDo: Implement the threads creation.
   for i := 0 to FNumMaxThreads - 1 do
   begin
     PartMB := TMandelbrot.Create(i, FWidth div FNumMaxThreads, FHeight, FZoom, FMaxIterations);
+    //add remainig pixel to be calculated ba the last thread
+    if i = FNumMaxThreads - 1 then
+    begin
+      PartMB.SetSize(PartMB.Width + FWidth mod FNumMaxThreads, PartMB.Height);
+    end;
     PartMB.SetStartPoint(FStartReal + i * ((FWidth div FNumMaxThreads) / FZoom), FStartImagenary);
     mbThread := TMBThread.Create(True, PartMB);
 

@@ -31,11 +31,14 @@ type
     function Iterate(const AX: integer; const AY: integer): QWord;
     function CalculateColor(const AIterations: QWord): TColor;
   public
+    property Width: integer read FWidth;
+    property Height: integer read FHeight;
     property OffsetX: integer read FOffsetX;
     constructor Create(const AOffsetX: integer; const AWidth: integer; const AHeight: integer;
       const AZoom: QWord; const AMaxIterations: QWord);
     destructor Destroy; override;
     procedure SetStartPoint(const AReal: extended; const AImagenary: extended);
+    procedure SetSize(const AWidth: integer; const AHeight: integer);
     procedure Calulate; virtual;
     function GetBitmap: TBitmap;
   end;
@@ -112,6 +115,13 @@ procedure TMandelbrot.SetStartPoint(const AReal: extended; const AImagenary: ext
 begin
   FStartReal := AReal;
   FStartImagenary := AImagenary;
+end;
+
+procedure TMandelbrot.SetSize(const AWidth: integer; const AHeight: integer);
+begin
+  FWidth := AWidth;
+  FHeight := AHeight;
+  FBitmap.SetSize(AWidth, AHeight);
 end;
 
 procedure TMandelbrot.Calulate;

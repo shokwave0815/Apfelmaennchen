@@ -21,9 +21,9 @@ type
   protected
     procedure Execute; override;
   public
+    property OnFinish: TOnFinish read FOnFinish write FOnFinish;
     constructor Create(CreateSuspended: boolean; AMandelbrot: TMandelbrot);
     destructor Destroy; override;
-    property OnFinish: TOnFinish read FOnFinish write FOnFinish;
   end;
 
 implementation

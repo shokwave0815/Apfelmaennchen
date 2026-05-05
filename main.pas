@@ -9,7 +9,7 @@ uses
   StdCtrls, LCLType, ComCtrls, Spin, mandelbrotmt;
 
 const
-  MyVersion = 'Apfelmännchen V1.01 ©2026 by shoKwave';
+  MyVersion = 'Apfelmännchen V1.1 ©2026 by shoKwave';
 
 type
 
