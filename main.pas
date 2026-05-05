@@ -170,7 +170,8 @@ begin
 
   FBufferImage.SetSize(PaintBox.Width, PaintBox.Height);
   FBufferImage.Canvas.Draw(0, 0, ABitmap);
-  Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0', (GetTickCount64 - FStartTime) / 1000) + 's with ' + IntToStr(FMandelBrot.NumThreads) + ' CPU-Threads used';
+  Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0', (GetTickCount64 - FStartTime) / 1000) +
+    's with ' + IntToStr(FMandelBrot.NumThreads) + ' CPU-Threads used';
 
   PaintBox.Invalidate;
 
