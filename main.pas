@@ -5,8 +5,7 @@ unit main;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, LCLType, ComCtrls, Spin, mandelbrotmt;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, LCLType, ComCtrls, Spin, mandelbrotmt;
 
 const
   MyVersion = 'Apfelmännchen V1.1 ©2026 by shoKwave';
@@ -43,11 +42,10 @@ type
     procedure PaintBoxPaint(Sender: TObject);
   private
     FStartTime: double;
-
     FBufferImage: TBitmap;
     FMandelBrot: TMandelbrotMT;
     procedure Center(const AX: integer; const AY: integer);
-    procedure PaintMandelbrot(ABitmap: TBitmap);
+    procedure PaintMandelbrot(const ABitmap: TBitmap);
     procedure UpdateStatus;
     procedure RefreshPicture;
   public
@@ -74,21 +72,21 @@ end;
 
 procedure TForm_Main.Button_RepaintClick(Sender: TObject);
 begin
-  RefreshPicture();
+  RefreshPicture;
 end;
 
 procedure TForm_Main.Button_SavePictureClick(Sender: TObject);
 begin
-  if (SaveDialog.Execute) then
+  if SaveDialog.Execute then
   begin
-    FMandelBrot.GetBitmap().SaveToFile(SaveDialog.FileName);
+    FMandelBrot.GetBitmap.SaveToFile(SaveDialog.FileName);
   end;
 end;
 
 procedure TForm_Main.Button_ZoomInClick(Sender: TObject);
 begin
   FMandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
-  UpdateStatus();
+  UpdateStatus;
 end;
 
 procedure TForm_Main.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -100,19 +98,19 @@ end;
 procedure TForm_Main.Button_ZoomOutClick(Sender: TObject);
 begin
   FMandelBrot.ZoomInOrOut(-1 * FloatSpinEdit_Zoom.Value);
-  UpdateStatus();
+  UpdateStatus;
 end;
 
 procedure TForm_Main.Button_IncIterationsClick(Sender: TObject);
 begin
   FMandelBrot.MaxIterations := Round(FMandelBrot.MaxIterations * 1.2);
-  UpdateStatus();
+  UpdateStatus;
 end;
 
 procedure TForm_Main.Button_DecIterationsClick(Sender: TObject);
 begin
   FMandelBrot.MaxIterations := Round(FMandelBrot.MaxIterations / 1.2);
-  UpdateStatus();
+  UpdateStatus;
 end;
 
 procedure TForm_Main.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -122,9 +120,9 @@ begin
     VK_DIVIDE: FMandelBrot.MaxIterations := Round(FMandelBrot.MaxIterations / 1.2);
     VK_ADD: Button_ZoomInClick(nil);
     VK_SUBTRACT: Button_ZoomOutClick(nil);
-    VK_F5: RefreshPicture();
+    VK_F5: RefreshPicture;
   end;
-  UpdateStatus();
+  UpdateStatus;
 end;
 
 procedure TForm_Main.FormResize(Sender: TObject);
@@ -136,27 +134,27 @@ begin
 
   FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
   Center(OldX, OldY);
-  RefreshPicture();
+  RefreshPicture;
 end;
 
 procedure TForm_Main.FormShow(Sender: TObject);
 begin
-  RefreshPicture();
+  RefreshPicture;
 end;
 
 procedure TForm_Main.PaintBoxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
-  if (Button = mbLeft) then
+  if Button = mbLeft then
   begin
     Center(X, Y);
     FMandelbrot.MaxIterations := round(FMandelbrot.MaxIterations * 1.05);
     FMandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
-  end else if (Button = mbRight) then
+  end else if Button = mbRight then
   begin
     FMandelbrot.MaxIterations := round(FMandelbrot.MaxIterations / 1.05);
     FMandelBrot.ZoomInOrOut(-1 * FloatSpinEdit_Zoom.Value);
   end;
-  RefreshPicture();
+  RefreshPicture;
 end;
 
 procedure TForm_Main.PaintBoxPaint(Sender: TObject);
@@ -164,7 +162,7 @@ begin
   PaintBox.Canvas.Draw(0, 0, FBufferImage);
 end;
 
-procedure TForm_Main.PaintMandelbrot(ABitmap: TBitmap);
+procedure TForm_Main.PaintMandelbrot(const ABitmap: TBitmap);
 begin
   PaintBox.Canvas.Draw(0, 0, ABitmap);
 
@@ -176,8 +174,7 @@ begin
   PaintBox.Invalidate;
 
   Label_Calc.Visible := True;
-  UpdateStatus();
-
+  UpdateStatus;
 end;
 
 procedure TForm_Main.Center(const AX: integer; const AY: integer);
@@ -200,8 +197,7 @@ begin
   Application.ProcessMessages;
 
   FStartTime := GetTickCount64;
-  FMandelBrot.Calulate();
-
+  FMandelBrot.Calulate;
 end;
 
 end.

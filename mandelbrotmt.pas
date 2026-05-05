@@ -9,7 +9,7 @@ uses
 
 type
 
-  TOnFinishCalculation = procedure(ABitmap: TBitmap) of object;
+  TOnFinishCalculation = procedure(const ABitmap: TBitmap) of object;
 
   { TMandelbrotMT }
 
@@ -74,7 +74,7 @@ end;
 constructor TMandelbrotMT.Create(const AWidth: integer; const AHeight: integer; const AZoom: QWord;
   const AMaxIterations: QWord);
 begin
-  inherited Create();
+  inherited Create;
 
   FWidth := AWidth;
   FHeight := AHeight;
@@ -87,8 +87,9 @@ begin
 
   // ProcessorCount does only work for me on windows. Tested on Windows11 25H2, macOS 26.4 and Ubuntu Budgie 24.04.
   //  FNumMaxThreads := TThread.ProcessorCount;
-  FNumMaxThreads := TLogicalCPUCount.GetLogicalCPUCount();
-  {$ifdef DARWIN}  // dirty hack becouse GetLogicalCPUCount doesn't work on my macOS
+  FNumMaxThreads := TLogicalCPUCount.GetLogicalCPUCount;
+  {$ifdef DARWIN}
+  // dirty hack becouse GetLogicalCPUCount doesn't work on my macOS
   FNumMaxThreads := 10;
   {$endif DARWIN}
   FNumRunningThreads := 0;

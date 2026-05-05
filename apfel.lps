@@ -9,14 +9,13 @@
         <Filename Value="apfel.lpr"/>
         <Loaded Value="True"/>
         <UsageCount Value="267"/>
-        <EditorIndex Value="6"/>
-        <TopLine Value="8"/>
+        <EditorIndex Value="5"/>
         <CursorPos Y="19"/>
       </Unit>
       <Unit>
         <Filename Value="mandelbrotthread.pas"/>
         <Loaded Value="True"/>
-        <UsageCount Value="43"/>
+        <UsageCount Value="44"/>
         <EditorIndex Value="3"/>
         <CursorPos Y="56"/>
       </Unit>
@@ -28,47 +27,39 @@
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
         <UsageCount Value="267"/>
-        <CursorPos X="25" Y="40"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="15" Y="125"/>
       </Unit>
       <Unit>
         <Filename Value="mandelbrot.pas"/>
         <Loaded Value="True"/>
         <UsageCount Value="267"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="75"/>
-        <CursorPos Y="79"/>
+        <CursorPos X="19" Y="89"/>
       </Unit>
       <Unit>
         <Filename Value="inerface_mandelbrot.pas"/>
-        <Loaded Value="True"/>
         <UsageCount Value="223"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="8"/>
       </Unit>
       <Unit>
         <Filename Value="mandelbrotmt.pas"/>
         <Loaded Value="True"/>
-        <UsageCount Value="140"/>
+        <UsageCount Value="141"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="74"/>
-        <CursorPos Y="91"/>
+        <CursorPos X="56" Y="90"/>
       </Unit>
       <Unit>
         <Filename Value="ulogicalcpucount.pas"/>
         <UnitName Value="ULogicalCPUCount"/>
         <Loaded Value="True"/>
-        <UsageCount Value="39"/>
+        <UsageCount Value="40"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="36"/>
         <CursorPos X="13" Y="60"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="mandelbrotmt.pas"/>
-        <Caret Line="24" Column="53" TopLine="9"/>
-      </Position>
       <Position>
         <Filename Value="mandelbrotthread.pas"/>
         <Caret Line="26" Column="74" TopLine="12"/>
@@ -183,6 +174,10 @@
       <Position>
         <Filename Value="mandelbrot.pas"/>
         <Caret Line="83" Column="21" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="167" Column="44" TopLine="37"/>
       </Position>
     </JumpHistory>
     <RunParams>

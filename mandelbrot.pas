@@ -86,7 +86,7 @@ end;
 constructor TMandelbrot.Create(const AOffsetX: integer; const AWidth: integer; const AHeight: integer;
   const AZoom: QWord; const AMaxIterations: QWord);
 begin
-  inherited Create();
+  inherited Create;
 
   FOffsetX := AOffsetX;
   FWidth := AWidth;

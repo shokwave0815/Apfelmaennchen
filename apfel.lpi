@@ -78,9 +78,6 @@
         <Filename Value="mandelbrot.pas"/>
       </Unit>
       <Unit>
-        <Filename Value="inerface_mandelbrot.pas"/>
-      </Unit>
-      <Unit>
         <Filename Value="mandelbrotmt.pas"/>
       </Unit>
       <Unit>
