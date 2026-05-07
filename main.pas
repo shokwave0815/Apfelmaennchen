@@ -48,9 +48,9 @@ type
     FBufferImage: TBitmap;
     FMandelBrot: TMandelbrotMT;
     procedure Center(const AX: integer; const AY: integer);
-    procedure PaintMandelbrot(const ABitmap: TBitmap);
     procedure UpdateStatus;
-    procedure RefreshPicture;
+    procedure StartCalculation;
+    procedure FinishCalculation(const ABitmap: TBitmap);
   public
 
   end;
@@ -70,13 +70,13 @@ begin
 
   FBufferImage := TBitmap.Create;
   FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360);
-  FMandelbrot.OnFinishCalculation := @PaintMandelbrot;
+  FMandelbrot.OnFinishCalculation := @FinishCalculation;
   FMandelBrot.SetStartPoint(-2, -1.2);
 end;
 
 procedure TForm_Main.Button_RepaintClick(Sender: TObject);
 begin
-  RefreshPicture;
+  StartCalculation;
 end;
 
 procedure TForm_Main.Button_SavePictureClick(Sender: TObject);
@@ -124,7 +124,7 @@ begin
     VK_DIVIDE: FMandelBrot.MaxIterations := Round(FMandelBrot.MaxIterations / 1.2);
     VK_ADD: Button_ZoomInClick(nil);
     VK_SUBTRACT: Button_ZoomOutClick(nil);
-    VK_F5: RefreshPicture;
+    VK_F5: StartCalculation;
   end;
   UpdateStatus;
 end;
@@ -138,12 +138,12 @@ begin
 
   FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
   Center(OldX, OldY);
-  RefreshPicture;
+  StartCalculation;
 end;
 
 procedure TForm_Main.FormShow(Sender: TObject);
 begin
-  RefreshPicture;
+  StartCalculation;
 end;
 
 procedure TForm_Main.PaintBoxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
@@ -153,28 +153,20 @@ begin
     Center(X, Y);
     FMandelbrot.MaxIterations := round(FMandelbrot.MaxIterations * 1.05);
     FMandelBrot.ZoomInOrOut(FloatSpinEdit_Zoom.Value);
-  end else if Button = mbRight then
+  end;
+
+  if Button = mbRight then
   begin
     FMandelbrot.MaxIterations := round(FMandelbrot.MaxIterations / 1.05);
     FMandelBrot.ZoomInOrOut(-1 * FloatSpinEdit_Zoom.Value);
   end;
-  RefreshPicture;
+
+  StartCalculation;
 end;
 
 procedure TForm_Main.PaintBoxPaint(Sender: TObject);
 begin
   PaintBox.Canvas.Draw(0, 0, FBufferImage);
-end;
-
-procedure TForm_Main.PaintMandelbrot(const ABitmap: TBitmap);
-begin
-  FRenderTime := (GetTickCount64 - FStartTime) / 1000;
-  FBufferImage.SetSize(PaintBox.Width, PaintBox.Height);
-  FBufferImage.Canvas.Draw(0, 0, ABitmap);
-  PaintBox.Invalidate;
-
-  FCalculating := False;
-  UpdateStatus;
 end;
 
 procedure TForm_Main.Center(const AX: integer; const AY: integer);
@@ -200,7 +192,7 @@ begin
   end;
 end;
 
-procedure TForm_Main.RefreshPicture;
+procedure TForm_Main.StartCalculation;
 begin
   if not FCalculating then
   begin
@@ -209,6 +201,18 @@ begin
     FStartTime := GetTickCount64;
     FMandelBrot.Calulate;
   end;
+end;
+
+//Called by event FMandelbrot.OnFinishCalculation
+procedure TForm_Main.FinishCalculation(const ABitmap: TBitmap);
+begin
+  FRenderTime := (GetTickCount64 - FStartTime) / 1000;
+  FBufferImage.SetSize(ABitmap.Width, ABitmap.Height);
+  FBufferImage.Canvas.Draw(0, 0, ABitmap);
+  PaintBox.Invalidate;
+
+  FCalculating := False;
+  UpdateStatus;
 end;
 
 end.
