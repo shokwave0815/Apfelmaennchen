@@ -187,7 +187,7 @@ begin
     Label_Calc.Caption := 'Calculating...';
   end else
   begin
-    Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0', FRenderTime) + 's with ' +
+    Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0###', FRenderTime) + 's with ' +
       IntToStr(FMandelBrot.NumThreads) + ' CPU-Threads used';
   end;
 end;
