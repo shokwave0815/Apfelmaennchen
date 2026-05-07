@@ -5,7 +5,8 @@ unit main;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, LCLType, ComCtrls, Spin, mandelbrotmt;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
+  StdCtrls, LCLType, ComCtrls, Spin, mandelbrotmt;
 
 const
   MyVersion = 'Apfelmännchen V1.1 ©2026 by shoKwave';
@@ -41,6 +42,8 @@ type
     procedure PaintBoxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure PaintBoxPaint(Sender: TObject);
   private
+    FCalculating: boolean;
+    FRenderTime: double;
     FStartTime: double;
     FBufferImage: TBitmap;
     FMandelBrot: TMandelbrotMT;
@@ -61,6 +64,7 @@ implementation
 
 procedure TForm_Main.FormCreate(Sender: TObject);
 begin
+  FCalculating := False;
   Caption := MyVersion;
   PaintBox.Canvas.AntialiasingMode := amOff;
 
@@ -164,16 +168,12 @@ end;
 
 procedure TForm_Main.PaintMandelbrot(const ABitmap: TBitmap);
 begin
-  PaintBox.Canvas.Draw(0, 0, ABitmap);
-
+  FRenderTime := (GetTickCount64 - FStartTime) / 1000;
   FBufferImage.SetSize(PaintBox.Width, PaintBox.Height);
   FBufferImage.Canvas.Draw(0, 0, ABitmap);
-  Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0', (GetTickCount64 - FStartTime) / 1000) +
-    's with ' + IntToStr(FMandelBrot.NumThreads) + ' CPU-Threads used';
-
   PaintBox.Invalidate;
 
-  Label_Calc.Visible := True;
+  FCalculating := False;
   UpdateStatus;
 end;
 
@@ -189,15 +189,26 @@ begin
     '/ StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) + '/ Zoom: ' +
     FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' + '/ Iterations: ' +
     FormatFloat('#,##0', FMandelBrot.MaxIterations * 1.0);
+
+  if FCalculating then
+  begin
+    Label_Calc.Caption := 'Calculating...';
+  end else
+  begin
+    Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0', FRenderTime) + 's with ' +
+      IntToStr(FMandelBrot.NumThreads) + ' CPU-Threads used';
+  end;
 end;
 
 procedure TForm_Main.RefreshPicture;
 begin
-  Label_Calc.Caption := 'calculating...';
-  Application.ProcessMessages;
-
-  FStartTime := GetTickCount64;
-  FMandelBrot.Calulate;
+  if not FCalculating then
+  begin
+    FCalculating := True;
+    UpdateStatus;
+    FStartTime := GetTickCount64;
+    FMandelBrot.Calulate;
+  end;
 end;
 
 end.
