@@ -25,7 +25,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="25"/>
         <CursorPos Y="41"/>
         <UsageCount Value="267"/>
         <Loaded Value="True"/>
@@ -62,14 +61,6 @@
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="166" Column="37" TopLine="164"/>
-      </Position>
-      <Position>
-        <Filename Value="mandelbrotmt.pas"/>
-        <Caret Line="27" Column="42" TopLine="7"/>
-      </Position>
       <Position>
         <Filename Value="mandelbrotmt.pas"/>
         <Caret Line="60" Column="25" TopLine="46"/>
@@ -180,6 +171,14 @@
       <Position>
         <Filename Value="main.pas"/>
         <Caret Line="50" Column="20" TopLine="33"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="41"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="40" TopLine="14"/>
       </Position>
     </JumpHistory>
     <RunParams>

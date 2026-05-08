@@ -1,10 +1,10 @@
 object Form_Main: TForm_Main
   Left = 352
-  Height = 640
+  Height = 583
   Top = 34
   Width = 640
   Caption = 'Form_Main'
-  ClientHeight = 640
+  ClientHeight = 583
   ClientWidth = 640
   DesignTimePPI = 120
   KeyPreview = True
@@ -16,28 +16,30 @@ object Form_Main: TForm_Main
   object PaintBox: TPaintBox
     Cursor = crCross
     Left = 0
-    Height = 443
-    Top = 51
-    Width = 512
+    Height = 512
+    Top = 42
+    Width = 640
     Align = alClient
     OnMouseUp = PaintBoxMouseUp
     OnPaint = PaintBoxPaint
   end
   object StatusBar: TStatusBar
     Left = 0
-    Height = 18
-    Top = 494
-    Width = 512
+    Height = 29
+    Top = 554
+    Width = 640
     Panels = <>
   end
   object Panel_Head: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
     Left = 0
-    Height = 64
+    Height = 42
     Top = 0
-    Width = 512
+    Width = 640
     Align = alTop
-    ClientHeight = 64
-    ClientWidth = 512
+    ClientHeight = 42
+    ClientWidth = 640
     TabOrder = 0
     object Button_ZoomIn: TButton
       AnchorSideLeft.Control = Panel_Head
@@ -72,7 +74,7 @@ object Form_Main: TForm_Main
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Button_ZoomOut
       Left = 214
-      Height = 21
+      Height = 28
       Top = 6
       Width = 89
       BorderSpacing.Left = 10
@@ -84,7 +86,7 @@ object Form_Main: TForm_Main
       AnchorSideLeft.Control = FloatSpinEdit_Zoom
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = FloatSpinEdit_Zoom
-      Left = 312
+      Left = 313
       Height = 30
       Top = 6
       Width = 95
@@ -94,27 +96,11 @@ object Form_Main: TForm_Main
       TabStop = False
       OnClick = Button_RepaintClick
     end
-    object Label_Calc: TLabel
-      AnchorSideLeft.Control = Panel_Head
-      AnchorSideRight.Control = Panel_Head
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = Panel_Head
-      AnchorSideBottom.Side = asrBottom
-      Left = 6
-      Height = 16
-      Top = 30
-      Width = 79
-      Anchors = [akLeft, akBottom]
-      BorderSpacing.Left = 5
-      BorderSpacing.Right = 5
-      BorderSpacing.Bottom = 5
-      ParentColor = False
-    end
     object Button_SavePicture: TButton
       AnchorSideTop.Control = Button_Repaint
       AnchorSideRight.Control = Panel_Head
       AnchorSideRight.Side = asrBottom
-      Left = 413
+      Left = 540
       Height = 30
       Top = 6
       Width = 94
@@ -151,6 +137,26 @@ object Form_Main: TForm_Main
       TabOrder = 5
       OnClick = Button_DecIterationsClick
     end
+  end
+  object Label_Calc: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Panel_Head
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = StatusBar
+    Left = 5
+    Height = 20
+    Top = 529
+    Width = 83
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 5
+    BorderSpacing.Right = 5
+    BorderSpacing.Bottom = 5
+    Caption = 'Calculating...'
+    Color = clWindow
+    Font.Color = clWindowText
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
   end
   object SaveDialog: TSaveDialog
     Title = 'Save file as'
