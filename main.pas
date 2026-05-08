@@ -194,6 +194,7 @@ begin
   if not FCalculating then
   begin
     FCalculating := True;
+    PaintBox.Cursor:= crHourGlass;
     UpdateStatus;
     FStartTime := GetTickCount64;
     FMandelBrot.Calulate;
@@ -208,6 +209,7 @@ begin
   FBufferImage.Canvas.Draw(0, 0, ABitmap);
   PaintBox.Invalidate;
 
+  PaintBox.Cursor:= crCross;
   FCalculating := False;
   UpdateStatus;
 end;
