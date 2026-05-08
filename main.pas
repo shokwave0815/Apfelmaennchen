@@ -132,12 +132,15 @@ procedure TForm_Main.FormResize(Sender: TObject);
 var
   OldX, OldY: integer;
 begin
-  OldX := FMandelBrot.Width div 2;
-  OldY := FMandelbrot.Height div 2;
+  if not FCalculating then
+  begin
+    OldX := FMandelBrot.Width div 2;
+    OldY := FMandelbrot.Height div 2;
 
-  FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
-  Center(OldX, OldY);
-  StartCalculation;
+    FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
+    Center(OldX, OldY);
+    StartCalculation;
+  end;
 end;
 
 procedure TForm_Main.PaintBoxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
