@@ -38,7 +38,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure FormResize(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure PaintBoxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure PaintBoxPaint(Sender: TObject);
   private
@@ -138,11 +137,6 @@ begin
 
   FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
   Center(OldX, OldY);
-  StartCalculation;
-end;
-
-procedure TForm_Main.FormShow(Sender: TObject);
-begin
   StartCalculation;
 end;
 

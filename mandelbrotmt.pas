@@ -52,10 +52,12 @@ procedure TMandelbrotMT.FOnExitThread(AMandelbrot: TMandelbrot);
 var
   offset: integer;
 begin
+  //paint the part calculated by the tread.
   offset := AMandelbrot.OffsetX * (FWidth div FNumMaxThreads);
-  FBitmap.Canvas.Draw(offset, 0, AMandelbrot.GetBitmap);// Just paint the part calculated by the tread.
+  FBitmap.Canvas.Draw(offset, 0, AMandelbrot.GetBitmap);
   FreeAndNil(AMandelbrot);
-  //Decrement number of running threads and if all finished call repaint of the Paintbox.
+
+  //if all threads finished call repaint of the Paintbox.
   FNumRunningThreads -= 1;
   if FNumRunningThreads = 0 then
   begin

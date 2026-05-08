@@ -8,7 +8,6 @@ uses
   Classes, SysUtils, Graphics, GraphUtil;
 
 const
-  COLOR_OFFSET = 0;
   HUE_MAX = 360;
   SATURATION_MAX = 255;
   BRIGHTNESS_MAX = 255;
@@ -74,13 +73,15 @@ function TMandelbrot.CalculateColor(const AIterations: QWord): TColor;
 var
   Hue, Saturation, Brightness: integer;
 begin
-  Hue := AIterations mod HUE_MAX + COLOR_OFFSET;
-  Saturation := SATURATION_MAX - Trunc((AIterations mod DIVISOR) * SATURATION_FACTOR);
+  Result := HSVRangeToColor(0, 0, 0);
 
-  Brightness := BRIGHTNESS_MAX;
-  if AIterations = FMaxIterations then Brightness := 0;
-
-  Result := HSVRangeToColor(Hue, Saturation, Brightness);
+  if AIterations < FMaxIterations then
+  begin
+    Brightness := BRIGHTNESS_MAX;
+    Hue := AIterations mod HUE_MAX;
+    Saturation := SATURATION_MAX - Trunc((Hue mod DIVISOR) * SATURATION_FACTOR);
+    Result := HSVRangeToColor(Hue, Saturation, Brightness);
+  end;
 end;
 
 constructor TMandelbrot.Create(const AOffsetX: integer; const AWidth: integer; const AHeight: integer;

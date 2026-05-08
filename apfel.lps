@@ -16,7 +16,7 @@
         <Filename Value="mandelbrotthread.pas"/>
         <EditorIndex Value="3"/>
         <CursorPos Y="56"/>
-        <UsageCount Value="48"/>
+        <UsageCount Value="59"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -25,8 +25,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="173"/>
-        <CursorPos X="67" Y="190"/>
+        <TopLine Value="25"/>
+        <CursorPos Y="41"/>
         <UsageCount Value="267"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -34,14 +34,15 @@
       <Unit>
         <Filename Value="mandelbrot.pas"/>
         <EditorIndex Value="4"/>
-        <CursorPos X="19" Y="89"/>
+        <CursorPos Y="11"/>
         <UsageCount Value="267"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="mandelbrotmt.pas"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="56" Y="90"/>
+        <TopLine Value="50"/>
+        <CursorPos X="5" Y="55"/>
         <UsageCount Value="141"/>
         <Loaded Value="True"/>
       </Unit>
@@ -50,14 +51,14 @@
         <UnitName Value="ULogicalCPUCount"/>
         <EditorIndex Value="2"/>
         <CursorPos X="13" Y="60"/>
-        <UsageCount Value="44"/>
+        <UsageCount Value="55"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="inerface_mandelbrot.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="8"/>
-        <UsageCount Value="222"/>
+        <UsageCount Value="220"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">

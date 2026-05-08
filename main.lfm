@@ -13,7 +13,6 @@ object Form_Main: TForm_Main
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
   OnResize = FormResize
-  OnShow = FormShow
   object PaintBox: TPaintBox
     Cursor = crCross
     Left = 0
