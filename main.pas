@@ -23,11 +23,11 @@ type
     Button_ZoomIn: TButton;
     Button_ZoomOut: TButton;
     FloatSpinEdit_Zoom: TFloatSpinEdit;
+    Label_Info: TLabel;
     Label_Calc: TLabel;
     PaintBox: TPaintBox;
     Panel_Head: TPanel;
     SaveDialog: TSaveDialog;
-    StatusBar: TStatusBar;
     procedure Button_IncIterationsClick(Sender: TObject);
     procedure Button_DecIterationsClick(Sender: TObject);
     procedure Button_ZoomOutClick(Sender: TObject);
@@ -174,10 +174,16 @@ end;
 
 procedure TForm_Main.UpdateStatus;
 begin
+  {
   StatusBar.SimpleText := 'StartX: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartReal) +
     '/ StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) + '/ Zoom: ' +
     FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' + '/ Iterations: ' +
     FormatFloat('#,##0', FMandelBrot.MaxIterations * 1.0);
+  }
+  Label_Info.Caption := 'StartX: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartReal) + LineEnding +
+    'StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) + LineEnding +
+    'Zoom: ' + FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' + LineEnding +
+    'Iterations: ' + FormatFloat('#,##0', FMandelBrot.MaxIterations * 1.0);
 
   if FCalculating then
   begin

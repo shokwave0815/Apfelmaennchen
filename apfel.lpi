@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="13"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
       <SessionStorage Value="InProjectDir"/>
@@ -11,9 +11,18 @@
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
+        <TextName Value="Apfel"/>
+        <TextDesc Value="Visualisation of the Mandelbrot set"/>
       </XPManifest>
       <Icon Value="0"/>
     </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <AutoIncrementBuild Value="True"/>
+      <MajorVersionNr Value="1"/>
+      <MinorVersionNr Value="1"/>
+      <StringTable CompanyName="shoKwave" FileDescription="Visualisation of the Mandelbrot set" ProductName="Apfel"/>
+    </VersionInfo>
     <BuildModes>
       <Item Name="Debug" Default="True"/>
       <Item Name="Release">
@@ -61,30 +70,6 @@
         <PackageName Value="LCL"/>
       </Item>
     </RequiredPackages>
-    <Units>
-      <Unit>
-        <Filename Value="apfel.lpr"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mandelbrotthread.pas"/>
-      </Unit>
-      <Unit>
-        <Filename Value="main.pas"/>
-        <ComponentName Value="Form_Main"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mandelbrot.pas"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mandelbrotmt.pas"/>
-      </Unit>
-      <Unit>
-        <Filename Value="ulogicalcpucount.pas"/>
-        <UnitName Value="ULogicalCPUCount"/>
-      </Unit>
-    </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
