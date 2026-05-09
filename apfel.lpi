@@ -21,7 +21,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="1"/>
-      <StringTable CompanyName="shoKwave" FileDescription="Visualisation of the Mandelbrot set" ProductName="Apfel"/>
+      <StringTable CompanyName="shoKwave" FileDescription="Visualisation of the Mandelbrot set" OriginalFilename="apfel.exe" ProductName="Apfelmännchen"/>
     </VersionInfo>
     <BuildModes>
       <Item Name="Debug" Default="True"/>
@@ -70,6 +70,36 @@
         <PackageName Value="LCL"/>
       </Item>
     </RequiredPackages>
+    <Units>
+      <Unit>
+        <Filename Value="apfel.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="mandelbrotthread.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="main.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form_Main"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="mandelbrot.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="mandelbrotmt.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="ulogicalcpucount.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ULogicalCPUCount"/>
+      </Unit>
+    </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>

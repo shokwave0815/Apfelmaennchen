@@ -174,12 +174,6 @@ end;
 
 procedure TForm_Main.UpdateStatus;
 begin
-  {
-  StatusBar.SimpleText := 'StartX: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartReal) +
-    '/ StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) + '/ Zoom: ' +
-    FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' + '/ Iterations: ' +
-    FormatFloat('#,##0', FMandelBrot.MaxIterations * 1.0);
-  }
   Label_Info.Caption := 'StartX: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartReal) + LineEnding +
     'StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) + LineEnding +
     'Zoom: ' + FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' + LineEnding +

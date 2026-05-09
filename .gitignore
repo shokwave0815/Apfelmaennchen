@@ -75,6 +75,9 @@ __recovery/
 modules/
 
 ## Lazarus
+#session information
+*.lps
+
 # backup
 backup/
 
