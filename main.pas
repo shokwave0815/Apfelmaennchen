@@ -209,7 +209,7 @@ begin
   FBufferImage.Canvas.Draw(0, 0, ABitmap);
   PaintBox.Invalidate;
 
-  PaintBox.Cursor:= crCross;
+  PaintBox.Cursor:= crDefault;
   FCalculating := False;
   UpdateStatus;
 end;
