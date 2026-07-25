@@ -41,6 +41,7 @@ type
     procedure PaintBoxPaint(Sender: TObject);
     procedure PaintBoxResize(Sender: TObject);
   private
+    FOldSize: TPoint;
     FCalculating: boolean;
     FRenderTime: double;
     FStartTime: double;
@@ -63,6 +64,7 @@ implementation
 
 procedure TForm_Main.FormCreate(Sender: TObject);
 begin
+  FOldSize := TPoint.Create(0, 0);
   FCalculating := False;
   Caption := MyVersion;
   PaintBox.Canvas.AntialiasingMode := amOff;
@@ -155,15 +157,15 @@ procedure TForm_Main.PaintBoxResize(Sender: TObject);
 var
   OldX, OldY: integer;
 begin
-  if not FCalculating then
+  if not FCalculating and (FOldSize.x <> PaintBox.Width) and (FOldSize.y <> PaintBox.Height)then
   begin
     OldX := FMandelBrot.Width div 2;
     OldY := FMandelbrot.Height div 2;
 
-    Application.ProcessMessages;
-
     FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
     Center(OldX, OldY);
+    FOldSize.X := FMandelBrot.Width;
+    FOldSize.Y := FMandelBrot.Height;
     StartCalculation;
   end;
 end;
