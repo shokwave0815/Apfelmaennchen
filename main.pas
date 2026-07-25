@@ -150,7 +150,10 @@ end;
 
 procedure TForm_Main.PaintBoxPaint(Sender: TObject);
 begin
-  PaintBox.Canvas.Draw(0, 0, FBufferImage);
+  PaintBox.Canvas.Draw(
+    PaintBox.Width div 2 - FBufferImage.Width div 2,
+    PaintBox.Height div 2 - FBufferImage.Height div 2,
+    FBufferImage);
 end;
 
 procedure TForm_Main.PaintBoxResize(Sender: TObject);
@@ -163,16 +166,18 @@ begin
     OldY := FMandelbrot.Height div 2;
 
     FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
-    Center(OldX, OldY);
     FOldSize.X := FMandelBrot.Width;
     FOldSize.Y := FMandelBrot.Height;
+
+    Center(OldX, OldY);
     StartCalculation;
   end;
 end;
 
 procedure TForm_Main.Center(const AX: integer; const AY: integer);
 begin
-  FMandelBrot.SetStartPoint(FMandelBrot.StartReal + (AX - PaintBox.Width / 2) / FMandelBrot.Zoom,
+  FMandelBrot.SetStartPoint(
+    FMandelBrot.StartReal + (AX - PaintBox.Width / 2) / FMandelBrot.Zoom,
     FMandelBrot.StartImagenary + (AY - PaintBox.Height / 2) / FMandelBrot.Zoom);
 end;
 
