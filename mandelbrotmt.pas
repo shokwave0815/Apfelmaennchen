@@ -5,17 +5,16 @@ unit mandelbrotmt;
 interface
 
 uses
-  Classes, SysUtils, Graphics, mandelbrot, mandelbrotthread, ULogicalCPUCount;
+  Classes, SysUtils, Graphics, Dialogs, mandelbrot, mandelbrotthread, ULogicalCPUCount;
 
 type
 
-  TOnFinishCalculation = procedure(const ABitmap: TBitmap) of object;
+  TOnFinishCalculation = procedure of object;
 
   { TMandelbrotMT }
 
   TMandelbrotMT = class(TObject)
   private
-    FBitmap: TBitmap;
     FStartReal: extended;
     FStartImagenary: extended;
     FWidth: integer;
@@ -25,8 +24,7 @@ type
     FOnFinishCalculation: TOnFinishCalculation;
     FNumRunningThreads: integer;
     FNumMaxThreads: integer;
-    procedure FOnExitThread(AMandelbrot: TMandelbrot);
-    procedure CallOnFinishCalculation;
+    procedure FOnExitThread;
   public
     property NumThreads: integer read FNumMaxThreads;
     property Width: integer read FWidth;
@@ -42,34 +40,21 @@ type
     procedure SetSize(const AWidth: integer; const AHeight: integer);
     procedure SetStartPoint(const AReal: extended; const AImagenary: extended);
     procedure ZoomInOrOut(const AFactor: double);
-    procedure Calulate; virtual;
-    function GetBitmap: TBitmap;
+    procedure Calulate(const ATargetBitmap: TBitmap); virtual;
   end;
 
 implementation
 
-procedure TMandelbrotMT.FOnExitThread(AMandelbrot: TMandelbrot);
-var
-  offset: integer;
+procedure TMandelbrotMT.FOnExitThread;
 begin
-  //paint the part calculated by the tread.
-  offset := AMandelbrot.OffsetX * (FWidth div FNumMaxThreads);
-  FBitmap.Canvas.Draw(offset, 0, AMandelbrot.GetBitmap);
-  FreeAndNil(AMandelbrot);
-
   //if all threads finished call repaint of the Paintbox.
-  FNumRunningThreads -= 1;
+  Dec(FNumRunningThreads);
   if FNumRunningThreads = 0 then
   begin
-    CallOnFinishCalculation;
-  end;
-end;
-
-procedure TMandelbrotMT.CallOnFinishCalculation;
-begin
-  if Assigned(FOnFinishCalculation) then
-  begin
-    FOnFinishCalculation(FBitmap);
+    if Assigned(FOnFinishCalculation) then
+    begin
+      FOnFinishCalculation;
+    end;
   end;
 end;
 
@@ -83,17 +68,12 @@ begin
   FZoom := AZoom;
   FMaxIterations := AMaxIterations;
 
-  FBitmap := TBitmap.Create;
-  FBitmap.SetSize(FWidth, FHeight);
-  FBitmap.Clear;
-
   FNumMaxThreads := GetLogicalCPUCount;
   FNumRunningThreads := 0;
 end;
 
 destructor TMandelbrotMT.Destroy;
 begin
-  FreeAndNil(FBitmap);
   inherited Destroy;
 end;
 
@@ -101,7 +81,6 @@ procedure TMandelbrotMT.SetSize(const AWidth: integer; const AHeight: integer);
 begin
   FWidth := AWidth;
   FHeight := AHeight;
-  FBitmap.SetSize(AWidth, AHeight);
 end;
 
 procedure TMandelbrotMT.SetStartPoint(const AReal: extended; const AImagenary: extended);
@@ -132,37 +111,33 @@ begin
   FStartImagenary := FStartImagenary + (oldYValue - newYValue) / 2;
 end;
 
-procedure TMandelbrotMT.Calulate;
+procedure TMandelbrotMT.Calulate(const ATargetBitmap: TBitmap);
 var
   mbThread: TMBThread;
   PartMB: TMandelbrot;
-  i: integer;
+  i, PartWidth: integer;
 begin
+  ATargetBitmap.SetSize(FWidth, FHeight);
+  PartWidth := FWidth div FNumMaxThreads;
   for i := 0 to FNumMaxThreads - 1 do
   begin
-    PartMB := TMandelbrot.Create(i, FWidth div FNumMaxThreads, FHeight, FZoom, FMaxIterations);
+    PartMB := TMandelbrot.Create(i * PartWidth, PartWidth, FHeight, FZoom, FMaxIterations);
     //add remainig pixel to be calculated ba the last thread
     if i = FNumMaxThreads - 1 then
     begin
       PartMB.SetSize(PartMB.Width + FWidth mod FNumMaxThreads, PartMB.Height);
     end;
     PartMB.SetStartPoint(FStartReal + i * ((FWidth div FNumMaxThreads) / FZoom), FStartImagenary);
-    mbThread := TMBThread.Create(True, PartMB);
+    mbThread := TMBThread.Create(True, PartMB, ATargetBitmap);
 
     //Check if creation failed.
     if Assigned(mbThread.FatalException) then
       raise mbThread.FatalException;
 
     mbThread.OnFinish := @FOnExitThread;
-    FNumRunningThreads += 1;
+    Inc(FNumRunningThreads);
     mbThread.Start;
-
   end;
-end;
-
-function TMandelbrotMT.GetBitmap: TBitmap;
-begin
-  Result := FBitmap;
 end;
 
 end.

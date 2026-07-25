@@ -49,7 +49,7 @@ type
     procedure Center(const AX: integer; const AY: integer);
     procedure UpdateStatus;
     procedure StartCalculation;
-    procedure FinishCalculation(const ABitmap: TBitmap);
+    procedure FinishCalculation;
   public
 
   end;
@@ -83,7 +83,7 @@ procedure TForm_Main.Button_SavePictureClick(Sender: TObject);
 begin
   if SaveDialog.Execute then
   begin
-    FMandelBrot.GetBitmap.SaveToFile(SaveDialog.FileName);
+    FBufferImage.SaveToFile(SaveDialog.FileName);
   end;
 end;
 
@@ -149,17 +149,19 @@ end;
 
 procedure TForm_Main.PaintBoxPaint(Sender: TObject);
 begin
-  PaintBox.Canvas.Draw(
-    PaintBox.Width div 2 - FBufferImage.Width div 2,
-    PaintBox.Height div 2 - FBufferImage.Height div 2,
-    FBufferImage);
+  if not FCalculating then
+  begin;
+    PaintBox.Canvas.Draw(
+      PaintBox.Width div 2 - FBufferImage.Width div 2,
+      PaintBox.Height div 2 - FBufferImage.Height div 2,
+      FBufferImage);
+  end;
 end;
 
 procedure TForm_Main.PaintBoxResize(Sender: TObject);
 var
   OldX, OldY: integer;
 begin
-  showMessage(IntToStr(PaintBox.Width) + ' x ' + IntToStr(PaintBox.Height));
   if (not FCalculating) and ((FMandelBrot.Width <> PaintBox.Width) or (FMandelBrot.Height <> PaintBox.Height)) then
   begin
     OldX := FMandelBrot.Width div 2;
@@ -201,28 +203,25 @@ procedure TForm_Main.StartCalculation;
 begin
   if not FCalculating then
   begin
+    FCalculating := True;
     Form_Main.Cursor:= crHourGlass;
     Panel_Head.Enabled := False;
-    FCalculating := True;
     UpdateStatus;
     FStartTime := GetTickCount64;
-    FMandelBrot.Calulate;
+    FMandelBrot.Calulate(FBufferImage);
   end;
 end;
 
 //Called by event FMandelbrot.OnFinishCalculation
-procedure TForm_Main.FinishCalculation(const ABitmap: TBitmap);
+procedure TForm_Main.FinishCalculation;
 begin
   FRenderTime := (GetTickCount64 - FStartTime) / 1000;
   FCalculating := False;
-
-  FBufferImage.SetSize(ABitmap.Width, ABitmap.Height);
-  FBufferImage.Canvas.Draw(0, 0, ABitmap);
-
   UpdateStatus;
-  PaintBox.Invalidate;
   Panel_Head.Enabled := True;
   Form_Main.Cursor:= crDefault;
+
+  PaintBox.Invalidate;
 end;
 
 end.

@@ -24,6 +24,7 @@ type
     FStartReal: extended;
     FStartImagenary: extended;
     FOffsetX: integer;
+    FDefaultWidth: integer;
     FWidth: integer;
     FHeight: integer;
     FMaxIterations: QWord;
@@ -31,6 +32,7 @@ type
     function Iterate(const AX: integer; const AY: integer): QWord;
     function CalculateColor(const AIterations: QWord): TColor;
   public
+    property DefaultWidth: integer read FDefaultWidth;
     property Width: integer read FWidth;
     property Height: integer read FHeight;
     property OffsetX: integer read FOffsetX;
@@ -89,6 +91,7 @@ constructor TMandelbrot.Create(const AOffsetX: integer; const AWidth: integer; c
 begin
   inherited Create;
 
+  FDefaultWidth := AWidth;
   FOffsetX := AOffsetX;
   FWidth := AWidth;
   FHeight := AHeight;
