@@ -179,7 +179,6 @@ object Form_Main: TForm_Main
     Transparent = False
   end
   object SaveDialog: TSaveDialog
-    Title = 'Save file as'
     DefaultExt = '.bmp'
     Filter = 'Bitmap(*.bmp)|*.bmp|All Files(*.*)|*.*'
     Left = 442

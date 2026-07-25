@@ -186,7 +186,7 @@ begin
   Label_Info.Caption := 'StartX: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartReal) + LineEnding +
     'StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) + LineEnding +
     'Zoom: ' + FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' + LineEnding +
-    'Iterations: ' + FormatFloat('#,##0', FMandelBrot.MaxIterations * 1.0);
+    'MaxIterations: ' + FormatFloat('#,##0', FMandelBrot.MaxIterations * 1.0);
 
   if FCalculating then
   begin

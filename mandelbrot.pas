@@ -81,11 +81,27 @@ begin
   begin
     Brightness := BRIGHTNESS_MAX;
     Hue := AIterations mod HUE_MAX;
+    Saturation := SATURATION_MAX - Trunc(Hue mod DIVISOR * SATURATION_FACTOR);
+
+    Result := HSVRangeToColor(Hue, Saturation, Brightness);
+  end;
+end;
+{
+function TMandelbrot.CalculateColor(const AIterations: QWord): TColor;
+var
+  Hue, Saturation, Brightness: integer;
+begin
+  Result := HSVRangeToColor(0, 0, 0);
+
+  if AIterations < FMaxIterations then
+  begin
+    Brightness := BRIGHTNESS_MAX;
+    Hue := AIterations mod HUE_MAX;
     Saturation := SATURATION_MAX - Trunc((Hue mod DIVISOR) * SATURATION_FACTOR);
     Result := HSVRangeToColor(Hue, Saturation, Brightness);
   end;
 end;
-
+}
 constructor TMandelbrot.Create(const AOffsetX: integer; const AWidth: integer; const AHeight: integer;
   const AZoom: QWord; const AMaxIterations: QWord);
 begin
