@@ -72,7 +72,7 @@ begin
   FBufferImage := TBitmap.Create;
   FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360);
   FMandelbrot.OnFinishCalculation := @FinishCalculation;
-  FMandelBrot.SetStartPoint(-2, -1.2);
+  FMandelBrot.SetStartPoint(-2.0, -1.2);
 end;
 
 procedure TForm_Main.Button_RepaintClick(Sender: TObject);
@@ -203,6 +203,7 @@ procedure TForm_Main.StartCalculation;
 begin
   if not FCalculating then
   begin
+    Panel_Head.Enabled := False;
     FCalculating := True;
     PaintBox.Cursor:= crHourGlass;
     UpdateStatus;
@@ -222,6 +223,7 @@ begin
   PaintBox.Cursor:= crDefault;
   FCalculating := False;
   UpdateStatus;
+  Panel_Head.Enabled := True;
 end;
 
 end.
