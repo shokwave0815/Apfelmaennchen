@@ -4,22 +4,22 @@ object Form_Main: TForm_Main
   Top = 34
   Width = 512
   Caption = 'Form_Main'
-  ClientHeight = 465
-  ClientWidth = 511
+  ClientHeight = 466
+  ClientWidth = 512
   KeyPreview = True
   LCLVersion = '4.99.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
-  OnResize = FormResize
   object PaintBox: TPaintBox
     Left = 0
-    Height = 431
+    Height = 432
     Top = 34
-    Width = 511
+    Width = 512
     Align = alClient
     OnMouseUp = PaintBoxMouseUp
     OnPaint = PaintBoxPaint
+    OnResize = PaintBoxResize
   end
   object Panel_Head: TPanel
     AnchorSideLeft.Control = Owner
@@ -27,10 +27,10 @@ object Form_Main: TForm_Main
     Left = 0
     Height = 34
     Top = 0
-    Width = 511
+    Width = 512
     Align = alTop
     ClientHeight = 34
-    ClientWidth = 511
+    ClientWidth = 512
     TabOrder = 0
     object Button_ZoomIn: TButton
       AnchorSideLeft.Control = Panel_Head
@@ -65,7 +65,7 @@ object Form_Main: TForm_Main
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Button_ZoomOut
       Left = 171
-      Height = 28
+      Height = 32
       Top = 5
       Width = 71
       BorderSpacing.Left = 8
@@ -91,7 +91,7 @@ object Form_Main: TForm_Main
       AnchorSideTop.Control = Button_Repaint
       AnchorSideRight.Control = Panel_Head
       AnchorSideRight.Side = asrBottom
-      Left = 431
+      Left = 432
       Height = 24
       Top = 5
       Width = 75
@@ -138,9 +138,9 @@ object Form_Main: TForm_Main
     AnchorSideBottom.Control = PaintBox
     AnchorSideBottom.Side = asrBottom
     Left = 4
-    Height = 14
-    Top = 447
-    Width = 66
+    Height = 17
+    Top = 445
+    Width = 79
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 4
     BorderSpacing.Right = 4
@@ -156,9 +156,9 @@ object Form_Main: TForm_Main
     AnchorSideLeft.Control = PaintBox
     AnchorSideTop.Control = PaintBox
     Left = 4
-    Height = 14
+    Height = 17
     Top = 38
-    Width = 52
+    Width = 62
     BorderSpacing.Left = 4
     BorderSpacing.Top = 4
     Caption = 'Label_Info'

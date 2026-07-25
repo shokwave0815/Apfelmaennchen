@@ -37,9 +37,9 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
-    procedure FormResize(Sender: TObject);
     procedure PaintBoxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure PaintBoxPaint(Sender: TObject);
+    procedure PaintBoxResize(Sender: TObject);
   private
     FCalculating: boolean;
     FRenderTime: double;
@@ -128,21 +128,6 @@ begin
   UpdateStatus;
 end;
 
-procedure TForm_Main.FormResize(Sender: TObject);
-var
-  OldX, OldY: integer;
-begin
-  if not FCalculating then
-  begin
-    OldX := FMandelBrot.Width div 2;
-    OldY := FMandelbrot.Height div 2;
-
-    FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
-    Center(OldX, OldY);
-    StartCalculation;
-  end;
-end;
-
 procedure TForm_Main.PaintBoxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
   if Button = mbLeft then
@@ -166,6 +151,23 @@ begin
   PaintBox.Canvas.Draw(0, 0, FBufferImage);
 end;
 
+procedure TForm_Main.PaintBoxResize(Sender: TObject);
+var
+  OldX, OldY: integer;
+begin
+  if not FCalculating then
+  begin
+    OldX := FMandelBrot.Width div 2;
+    OldY := FMandelbrot.Height div 2;
+
+    Application.ProcessMessages;
+
+    FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
+    Center(OldX, OldY);
+    StartCalculation;
+  end;
+end;
+
 procedure TForm_Main.Center(const AX: integer; const AY: integer);
 begin
   FMandelBrot.SetStartPoint(FMandelBrot.StartReal + (AX - PaintBox.Width / 2) / FMandelBrot.Zoom,
@@ -184,8 +186,9 @@ begin
     Label_Calc.Caption := 'Calculating...';
   end else
   begin
-    Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0###', FRenderTime) + 's with ' +
-      IntToStr(FMandelBrot.NumThreads) + ' CPU-Threads used';
+    Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0###', FRenderTime) + 's using ' +
+      IntToStr(FMandelBrot.NumThreads) + ' CPU-Threads for a picture size of ' +
+      IntToStr(FBufferImage.Width) + ' x ' + IntToStr(FBufferImage.Height) + ' pixels';
   end;
 end;
 
