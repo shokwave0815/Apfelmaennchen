@@ -87,13 +87,7 @@ begin
   FBitmap.SetSize(FWidth, FHeight);
   FBitmap.Clear;
 
-  // ProcessorCount does only work for me on windows. Tested on Windows11 25H2, macOS 26.4 and Ubuntu Budgie 24.04.
-  //  FNumMaxThreads := TThread.ProcessorCount;
-  FNumMaxThreads := TLogicalCPUCount.GetLogicalCPUCount;
-  {$ifdef DARWIN}
-  // dirty hack becouse GetLogicalCPUCount doesn't work on my macOS
-  FNumMaxThreads := 10;
-  {$endif DARWIN}
+  FNumMaxThreads := GetLogicalCPUCount;
   FNumRunningThreads := 0;
 end;
 
