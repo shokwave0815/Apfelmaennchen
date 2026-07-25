@@ -7,10 +7,11 @@ object Form_Main: TForm_Main
   ClientHeight = 466
   ClientWidth = 512
   KeyPreview = True
-  LCLVersion = '4.99.0.0'
+  LCLVersion = '4.9.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
+  OnResize = PaintBoxResize
   object PaintBox: TPaintBox
     Left = 0
     Height = 432
