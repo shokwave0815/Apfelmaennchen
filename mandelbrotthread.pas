@@ -59,6 +59,7 @@ end;
 
 destructor TMBThread.Destroy;
 begin
+  FreeAndNil(FMandelbrot);
   inherited Destroy;
 end;
 
