@@ -41,7 +41,6 @@ type
     procedure PaintBoxPaint(Sender: TObject);
     procedure PaintBoxResize(Sender: TObject);
   private
-    FOldSize: TPoint;
     FCalculating: boolean;
     FRenderTime: double;
     FStartTime: double;
@@ -64,7 +63,6 @@ implementation
 
 procedure TForm_Main.FormCreate(Sender: TObject);
 begin
-  FOldSize := TPoint.Create(0, 0);
   FCalculating := False;
   Caption := MyVersion;
   PaintBox.Canvas.AntialiasingMode := amOff;
@@ -72,7 +70,8 @@ begin
   FBufferImage := TBitmap.Create;
   FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360);
   FMandelbrot.OnFinishCalculation := @FinishCalculation;
-  FMandelBrot.SetStartPoint(-2.0, -1.2);
+  FMandelBrot.SetStartPoint(-2.0, -1.3);
+  StartCalculation;
 end;
 
 procedure TForm_Main.Button_RepaintClick(Sender: TObject);
@@ -160,14 +159,13 @@ procedure TForm_Main.PaintBoxResize(Sender: TObject);
 var
   OldX, OldY: integer;
 begin
-  if not FCalculating and (FOldSize.x <> PaintBox.Width) and (FOldSize.y <> PaintBox.Height)then
+  showMessage(IntToStr(PaintBox.Width) + ' x ' + IntToStr(PaintBox.Height));
+  if (not FCalculating) and ((FMandelBrot.Width <> PaintBox.Width) or (FMandelBrot.Height <> PaintBox.Height)) then
   begin
     OldX := FMandelBrot.Width div 2;
     OldY := FMandelbrot.Height div 2;
 
     FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
-    FOldSize.X := FMandelBrot.Width;
-    FOldSize.Y := FMandelBrot.Height;
 
     Center(OldX, OldY);
     StartCalculation;
@@ -203,9 +201,9 @@ procedure TForm_Main.StartCalculation;
 begin
   if not FCalculating then
   begin
+    Form_Main.Cursor:= crHourGlass;
     Panel_Head.Enabled := False;
     FCalculating := True;
-    PaintBox.Cursor:= crHourGlass;
     UpdateStatus;
     FStartTime := GetTickCount64;
     FMandelBrot.Calulate;
@@ -216,14 +214,15 @@ end;
 procedure TForm_Main.FinishCalculation(const ABitmap: TBitmap);
 begin
   FRenderTime := (GetTickCount64 - FStartTime) / 1000;
+  FCalculating := False;
+
   FBufferImage.SetSize(ABitmap.Width, ABitmap.Height);
   FBufferImage.Canvas.Draw(0, 0, ABitmap);
-  PaintBox.Invalidate;
 
-  PaintBox.Cursor:= crDefault;
-  FCalculating := False;
   UpdateStatus;
+  PaintBox.Invalidate;
   Panel_Head.Enabled := True;
+  Form_Main.Cursor:= crDefault;
 end;
 
 end.
