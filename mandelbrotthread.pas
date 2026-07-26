@@ -17,13 +17,13 @@ type
   private
     FOnFinish: TOnFinish;
     FMandelbrot: TMandelbrot;
-    FTargetBitMap: TBitmap;
+    FBitmap: TBitmap;
     procedure CallOnFinish;
   protected
     procedure Execute; override;
   public
     property OnFinish: TOnFinish read FOnFinish write FOnFinish;
-    constructor Create(CreateSuspended: boolean; const AMandelbrot: TMandelbrot; const ATargetBitmap: TBitmap);
+    constructor Create(CreateSuspended: boolean; const AMandelbrot: TMandelbrot; const ABitmap: TBitmap);
     destructor Destroy; override;
   end;
 
@@ -33,7 +33,7 @@ implementation
 
 procedure TMBThread.CallOnFinish;
 begin
-  FTargetBitMap.Canvas.Draw(FMandelbrot.OffsetX, 0, FMandelbrot.GetBitmap);
+  FBitmap.Canvas.Draw(FMandelbrot.OffsetX, 0, FMandelbrot.GetBitmap);
   if Assigned(FOnFinish) then
   begin
     FOnFinish;
@@ -49,13 +49,12 @@ begin
   end;
 end;
 
-constructor TMBThread.Create(CreateSuspended: boolean;
-  const AMandelbrot: TMandelbrot; const ATargetBitmap: TBitmap);
+constructor TMBThread.Create(CreateSuspended: boolean; const AMandelbrot: TMandelbrot; const ABitmap: TBitmap);
 begin
   inherited Create(CreateSuspended);
   FreeOnTerminate := True;
   FMandelbrot := AMandelbrot;
-  FTargetBitmap := ATargetBitmap;
+  FBitmap := ABitmap;
 end;
 
 destructor TMBThread.Destroy;

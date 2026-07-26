@@ -68,7 +68,7 @@ begin
   PaintBox.Canvas.AntialiasingMode := amOff;
 
   FBufferImage := TBitmap.Create;
-  FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360);
+  FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360, FBufferImage);
   FMandelbrot.OnFinishCalculation := @FinishCalculation;
   FMandelBrot.SetStartPoint(-2.0, -1.3);
   StartCalculation;
@@ -149,13 +149,10 @@ end;
 
 procedure TForm_Main.PaintBoxPaint(Sender: TObject);
 begin
-  if not FCalculating then
-  begin;
-    PaintBox.Canvas.Draw(
-      PaintBox.Width div 2 - FBufferImage.Width div 2,
-      PaintBox.Height div 2 - FBufferImage.Height div 2,
-      FBufferImage);
-  end;
+  PaintBox.Canvas.Draw(
+    PaintBox.Width div 2 - FBufferImage.Width div 2,
+    PaintBox.Height div 2 - FBufferImage.Height div 2,
+    FBufferImage);
 end;
 
 procedure TForm_Main.PaintBoxResize(Sender: TObject);
@@ -209,7 +206,7 @@ begin
     Panel_Head.Enabled := False;
     UpdateStatus;
     FStartTime := GetTickCount64;
-    FMandelBrot.Calulate(FBufferImage);
+    FMandelBrot.Calulate;
   end;
 end;
 
@@ -217,13 +214,12 @@ end;
 procedure TForm_Main.FinishCalculation;
 begin
   FRenderTime := (GetTickCount64 - FStartTime) / 1000;
-  FCalculating := False;
-  UpdateStatus;
   Panel_Head.Enabled := True;
   Form_Main.Cursor:= crDefault;
   PaintBox.Cursor:= crDefault;
-
   PaintBox.Invalidate;
+  FCalculating := False;
+  UpdateStatus;
 end;
 
 end.

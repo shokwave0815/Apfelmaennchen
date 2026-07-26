@@ -15,6 +15,8 @@ type
 
   TMandelbrotMT = class(TObject)
   private
+    FBitmap: TBitmap;
+    FTargetBitmap: TBitmap;
     FStartReal: extended;
     FStartImagenary: extended;
     FWidth: integer;
@@ -34,13 +36,14 @@ type
     property Zoom: QWord read FZoom write FZoom;
     property MaxIterations: QWord read FMaxIterations write FMaxIterations;
     property OnFinishCalculation: TOnFinishCalculation read FOnFinishCalculation write FOnFinishCalculation;
-    constructor Create(const AWidth: integer; const AHeight: integer; const AZoom: QWord;
-      const AMaxIterations: QWord);
+    constructor Create(const AWidth: integer; const AHeight: integer;
+      const AZoom: QWord; const AMaxIterations: QWord;
+  const ATargetBitmap: TBitmap);
     destructor Destroy; override;
     procedure SetSize(const AWidth: integer; const AHeight: integer);
     procedure SetStartPoint(const AReal: extended; const AImagenary: extended);
     procedure ZoomInOrOut(const AFactor: double);
-    procedure Calulate(const ATargetBitmap: TBitmap); virtual;
+    procedure Calulate; virtual;
   end;
 
 implementation
@@ -53,13 +56,15 @@ begin
   begin
     if Assigned(FOnFinishCalculation) then
     begin
+      FTargetBitmap.SetSize(FWidth, FHeight);
+      FTargetBitmap.Canvas.Draw(0, 0, FBitmap);
       FOnFinishCalculation;
     end;
   end;
 end;
 
 constructor TMandelbrotMT.Create(const AWidth: integer; const AHeight: integer; const AZoom: QWord;
-  const AMaxIterations: QWord);
+  const AMaxIterations: QWord; const ATargetBitmap: TBitmap);
 begin
   inherited Create;
 
@@ -68,12 +73,18 @@ begin
   FZoom := AZoom;
   FMaxIterations := AMaxIterations;
 
+  FBitmap := TBitmap.Create;
+  FBitmap.SetSize(FWidth, FHeight);
+
+  FTargetBitmap := ATargetBitmap;
+
   FNumMaxThreads := GetLogicalCPUCount;
   FNumRunningThreads := 0;
 end;
 
 destructor TMandelbrotMT.Destroy;
 begin
+  FreeAndNil(FBitmap);
   inherited Destroy;
 end;
 
@@ -111,13 +122,13 @@ begin
   FStartImagenary := FStartImagenary + (oldYValue - newYValue) / 2;
 end;
 
-procedure TMandelbrotMT.Calulate(const ATargetBitmap: TBitmap);
+procedure TMandelbrotMT.Calulate;
 var
   mbThread: TMBThread;
   PartMB: TMandelbrot;
   i, PartWidth: integer;
 begin
-  ATargetBitmap.SetSize(FWidth, FHeight);
+  FBitmap.SetSize(FWidth, FHeight);
   PartWidth := FWidth div FNumMaxThreads;
   for i := 0 to FNumMaxThreads - 1 do
   begin
@@ -128,7 +139,7 @@ begin
       PartMB.SetSize(PartMB.Width + FWidth mod FNumMaxThreads, PartMB.Height);
     end;
     PartMB.SetStartPoint(FStartReal + i * ((FWidth div FNumMaxThreads) / FZoom), FStartImagenary);
-    mbThread := TMBThread.Create(True, PartMB, ATargetBitmap);
+    mbThread := TMBThread.Create(True, PartMB, FBitmap);
 
     //Check if creation failed.
     if Assigned(mbThread.FatalException) then
