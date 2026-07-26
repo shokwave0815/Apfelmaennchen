@@ -47,10 +47,10 @@ implementation
 
 procedure TMandelbrotMT.FOnExitThread;
 begin
-  //if all threads finished call repaint of the Paintbox.
   Dec(FNumRunningThreads);
   if FNumRunningThreads = 0 then
   begin
+    //if all threads finished call event to repaint PaintBox.
     if Assigned(FOnFinishCalculation) then
     begin
       FOnFinishCalculation;
