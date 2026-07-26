@@ -205,6 +205,7 @@ begin
   begin
     FCalculating := True;
     Form_Main.Cursor:= crHourGlass;
+    PaintBox.Cursor:= crHourGlass;
     Panel_Head.Enabled := False;
     UpdateStatus;
     FStartTime := GetTickCount64;
@@ -220,6 +221,7 @@ begin
   UpdateStatus;
   Panel_Head.Enabled := True;
   Form_Main.Cursor:= crDefault;
+  PaintBox.Cursor:= crDefault;
 
   PaintBox.Invalidate;
 end;

@@ -24,7 +24,6 @@ type
     FStartReal: extended;
     FStartImagenary: extended;
     FOffsetX: integer;
-    FDefaultWidth: integer;
     FWidth: integer;
     FHeight: integer;
     FMaxIterations: QWord;
@@ -32,7 +31,6 @@ type
     function Iterate(const AX: integer; const AY: integer): QWord;
     function CalculateColor(const AIterations: QWord): TColor;
   public
-    property DefaultWidth: integer read FDefaultWidth;
     property Width: integer read FWidth;
     property Height: integer read FHeight;
     property OffsetX: integer read FOffsetX;
@@ -86,28 +84,12 @@ begin
     Result := HSVRangeToColor(Hue, Saturation, Brightness);
   end;
 end;
-{
-function TMandelbrot.CalculateColor(const AIterations: QWord): TColor;
-var
-  Hue, Saturation, Brightness: integer;
-begin
-  Result := HSVRangeToColor(0, 0, 0);
 
-  if AIterations < FMaxIterations then
-  begin
-    Brightness := BRIGHTNESS_MAX;
-    Hue := AIterations mod HUE_MAX;
-    Saturation := SATURATION_MAX - Trunc((Hue mod DIVISOR) * SATURATION_FACTOR);
-    Result := HSVRangeToColor(Hue, Saturation, Brightness);
-  end;
-end;
-}
 constructor TMandelbrot.Create(const AOffsetX: integer; const AWidth: integer; const AHeight: integer;
   const AZoom: QWord; const AMaxIterations: QWord);
 begin
   inherited Create;
 
-  FDefaultWidth := AWidth;
   FOffsetX := AOffsetX;
   FWidth := AWidth;
   FHeight := AHeight;
