@@ -37,10 +37,12 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
     procedure PaintBoxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure PaintBoxPaint(Sender: TObject);
     procedure PaintBoxResize(Sender: TObject);
   private
+    FIsStartup: Boolean;
     FCalculating: boolean;
     FRenderTime: double;
     FStartTime: double;
@@ -63,15 +65,12 @@ implementation
 
 procedure TForm_Main.FormCreate(Sender: TObject);
 begin
+  FIsStartup := True;;
   FCalculating := False;
   Caption := MyVersion;
   PaintBox.Canvas.AntialiasingMode := amOff;
 
   FBufferImage := TBitmap.Create;
-  FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360, FBufferImage);
-  FMandelbrot.OnFinishCalculation := @FinishCalculation;
-  FMandelBrot.SetStartPoint(-2.0, -1.3);
-  StartCalculation;
 end;
 
 procedure TForm_Main.Button_RepaintClick(Sender: TObject);
@@ -129,6 +128,18 @@ begin
   UpdateStatus;
 end;
 
+procedure TForm_Main.FormShow(Sender: TObject);
+begin
+  if FIsStartup then
+  begin
+    FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360, FBufferImage);
+    FMandelbrot.OnFinishCalculation := @FinishCalculation;
+    FMandelBrot.SetStartPoint(-2.0, -1.3);
+    StartCalculation;
+    FIsStartup := False;
+  end;
+end;
+
 procedure TForm_Main.PaintBoxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
   if Button = mbLeft then
@@ -159,7 +170,7 @@ procedure TForm_Main.PaintBoxResize(Sender: TObject);
 var
   OldX, OldY: integer;
 begin
-  if (not FCalculating) and ((FMandelBrot.Width <> PaintBox.Width) or (FMandelBrot.Height <> PaintBox.Height)) then
+  if (not FIsStartup) and (not FCalculating) and ((FMandelBrot.Width <> PaintBox.Width) or (FMandelBrot.Height <> PaintBox.Height)) then
   begin
     OldX := FMandelBrot.Width div 2;
     OldY := FMandelbrot.Height div 2;

@@ -7,6 +7,9 @@ interface
 uses
   Classes, SysUtils, Graphics, Dialogs, mandelbrot, mandelbrotthread, ULogicalCPUCount;
 
+var
+  CritSec: TRTLCriticalSection;
+
 type
 
   TOnFinishCalculation = procedure of object;
@@ -26,7 +29,7 @@ type
     FOnFinishCalculation: TOnFinishCalculation;
     FNumRunningThreads: integer;
     FNumMaxThreads: integer;
-    procedure FOnExitThread;
+    procedure FOnExitThread(AMandelbrot: TMandelbrot);
   public
     property NumThreads: integer read FNumMaxThreads;
     property Width: integer read FWidth;
@@ -48,9 +51,12 @@ type
 
 implementation
 
-procedure TMandelbrotMT.FOnExitThread;
+procedure TMandelbrotMT.FOnExitThread(AMandelbrot: TMandelbrot);
 begin
+  EnterCriticalSection(CritSec);
+  FBitmap.Canvas.Draw(AMandelbrot.OffsetX, 0, AMandelbrot.GetBitmap);
   Dec(FNumRunningThreads);
+  LeaveCriticalSection(CritSec);
   if FNumRunningThreads = 0 then
   begin
     //if all threads finished call event to repaint PaintBox.
@@ -68,6 +74,8 @@ constructor TMandelbrotMT.Create(const AWidth: integer; const AHeight: integer; 
 begin
   inherited Create;
 
+  InitCriticalSection(CritSec);
+
   FWidth := AWidth;
   FHeight := AHeight;
   FZoom := AZoom;
@@ -84,6 +92,7 @@ end;
 
 destructor TMandelbrotMT.Destroy;
 begin
+  DoneCriticalSection(CritSec);
   FreeAndNil(FBitmap);
   inherited Destroy;
 end;

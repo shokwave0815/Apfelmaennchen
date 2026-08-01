@@ -9,7 +9,7 @@ uses
 
 type
 
-  TOnFinish = procedure of object;
+  TOnFinish = procedure(AMandelbrot: TMandelbrot) of object;
 
   { TMBThread }
 
@@ -18,7 +18,6 @@ type
     FOnFinish: TOnFinish;
     FMandelbrot: TMandelbrot;
     FBitmap: TBitmap;
-    procedure CallOnFinish;
   protected
     procedure Execute; override;
   public
@@ -31,21 +30,15 @@ implementation
 
 { TMBThread }
 
-procedure TMBThread.CallOnFinish;
-begin
-  FBitmap.Canvas.Draw(FMandelbrot.OffsetX, 0, FMandelbrot.GetBitmap);
-  if Assigned(FOnFinish) then
-  begin
-    FOnFinish;
-  end;
-end;
-
 procedure TMBThread.Execute;
 begin
   try
     FMandelbrot.Calulate;
   finally
-    Synchronize(@CallOnFinish);
+    if Assigned(FOnFinish) then
+    begin
+      FOnFinish(FMandelbrot);
+    end;
   end;
 end;
 
