@@ -132,7 +132,7 @@ procedure TForm_Main.FormShow(Sender: TObject);
 begin
   if FIsStartup then
   begin
-    FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360, FBufferImage);
+    FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360);
     FMandelbrot.OnFinishCalculation := @FinishCalculation;
     FMandelBrot.SetStartPoint(-2.0, -1.3);
     StartCalculation;
@@ -223,8 +223,15 @@ end;
 
 //Called by event FMandelbrot.OnFinishCalculation
 procedure TForm_Main.FinishCalculation;
+var
+  NewBitmap: TBitmap;
 begin
   FRenderTime := (GetTickCount64 - FStartTime) / 1000;
+
+  NewBitmap := FMandelbrot.GetBitmap;
+  FBufferImage.SetSize(NewBitmap.Width, NewBitmap.Height);
+  FBufferImage.Canvas.Draw(0, 0, NewBitmap);
+
   Panel_Head.Enabled := True;
   Form_Main.Cursor:= crDefault;
   PaintBox.Cursor:= crDefault;

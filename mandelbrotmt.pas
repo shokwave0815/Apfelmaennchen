@@ -19,7 +19,6 @@ type
   TMandelbrotMT = class(TObject)
   private
     FBitmap: TBitmap;
-    FTargetBitmap: TBitmap;
     FStartReal: extended;
     FStartImagenary: extended;
     FWidth: integer;
@@ -40,13 +39,13 @@ type
     property MaxIterations: QWord read FMaxIterations write FMaxIterations;
     property OnFinishCalculation: TOnFinishCalculation read FOnFinishCalculation write FOnFinishCalculation;
     constructor Create(const AWidth: integer; const AHeight: integer;
-      const AZoom: QWord; const AMaxIterations: QWord;
-  const ATargetBitmap: TBitmap);
+      const AZoom: QWord; const AMaxIterations: QWord);
     destructor Destroy; override;
     procedure SetSize(const AWidth: integer; const AHeight: integer);
     procedure SetStartPoint(const AReal: extended; const AImagenary: extended);
     procedure ZoomInOrOut(const AFactor: double);
     procedure Calulate; virtual;
+    function GetBitmap: TBitmap;
   end;
 
 implementation
@@ -56,21 +55,20 @@ begin
   EnterCriticalSection(CritSec);
   FBitmap.Canvas.Draw(AMandelbrot.OffsetX, 0, AMandelbrot.GetBitmap);
   Dec(FNumRunningThreads);
-  LeaveCriticalSection(CritSec);
+
   if FNumRunningThreads = 0 then
   begin
     //if all threads finished call event to repaint PaintBox.
     if Assigned(FOnFinishCalculation) then
     begin
-      FTargetBitmap.SetSize(FWidth, FHeight);
-      FTargetBitmap.Canvas.Draw(0, 0, FBitmap);
       FOnFinishCalculation;
     end;
   end;
+  LeaveCriticalSection(CritSec);
 end;
 
 constructor TMandelbrotMT.Create(const AWidth: integer; const AHeight: integer; const AZoom: QWord;
-  const AMaxIterations: QWord; const ATargetBitmap: TBitmap);
+  const AMaxIterations: QWord);
 begin
   inherited Create;
 
@@ -83,8 +81,6 @@ begin
 
   FBitmap := TBitmap.Create;
   FBitmap.SetSize(FWidth, FHeight);
-
-  FTargetBitmap := ATargetBitmap;
 
   FNumMaxThreads := GetLogicalCPUCount;
   FNumRunningThreads := 0;
@@ -148,7 +144,7 @@ begin
       PartMB.SetSize(PartMB.Width + FWidth mod FNumMaxThreads, PartMB.Height);
     end;
     PartMB.SetStartPoint(FStartReal + i * ((FWidth div FNumMaxThreads) / FZoom), FStartImagenary);
-    mbThread := TMBThread.Create(True, PartMB, FBitmap);
+    mbThread := TMBThread.Create(True, PartMB);
 
     //Check if creation failed.
     if Assigned(mbThread.FatalException) then
@@ -158,6 +154,11 @@ begin
     Inc(FNumRunningThreads);
     mbThread.Start;
   end;
+end;
+
+function TMandelbrotMT.GetBitmap: TBitmap;
+begin
+  Result := FBitmap;
 end;
 
 end.

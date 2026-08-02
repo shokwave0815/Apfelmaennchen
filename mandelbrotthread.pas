@@ -22,7 +22,7 @@ type
     procedure Execute; override;
   public
     property OnFinish: TOnFinish read FOnFinish write FOnFinish;
-    constructor Create(CreateSuspended: boolean; const AMandelbrot: TMandelbrot; const ABitmap: TBitmap);
+    constructor Create(CreateSuspended: boolean; const AMandelbrot: TMandelbrot);
     destructor Destroy; override;
   end;
 
@@ -42,12 +42,11 @@ begin
   end;
 end;
 
-constructor TMBThread.Create(CreateSuspended: boolean; const AMandelbrot: TMandelbrot; const ABitmap: TBitmap);
+constructor TMBThread.Create(CreateSuspended: boolean; const AMandelbrot: TMandelbrot);
 begin
   inherited Create(CreateSuspended);
   FreeOnTerminate := True;
   FMandelbrot := AMandelbrot;
-  FBitmap := ABitmap;
 end;
 
 destructor TMBThread.Destroy;
