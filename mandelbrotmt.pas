@@ -106,9 +106,9 @@ begin
   if Assigned(ThreadManager.FatalException) then
     raise ThreadManager.FatalException;
 
-  //ThreadManager.OnFinish := @OnExitThread;
   ThreadManager.Start;
   ThreadManager.WaitFor;
+  FBitmap.SetSize(FWidth, FHeight);
   FBitmap.Canvas.Draw(0, 0, ThreadManager.GetBitmap);
   ThreadManager.Free;
 end;

@@ -204,7 +204,7 @@ begin
   begin
     Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0###', FRenderTime) + 's using ' +
       IntToStr(FMandelBrot.NumMaxThreads) + ' CPU-Threads for a picture size of ' +
-      IntToStr(FBufferImage.Width) + ' x ' + IntToStr(FBufferImage.Height) + ' pixels';
+      IntToStr(FMandelBrot.Width) + ' x ' + IntToStr(FMandelBrot.Height) + ' pixels';
   end;
 end;
 
@@ -217,18 +217,20 @@ begin
     PaintBox.Cursor := crHourGlass;
     Panel_Head.Enabled := False;
     UpdateStatus;
+    Application.ProcessMessages;
+
 
     FStartTime := GetTickCount64;
     FMandelBrot.Calulate;
     FRenderTime := (GetTickCount64 - FStartTime) / 1000;
 
-    FBufferImage.SetSize(FMandelbrot.Bitmap.Width, FMandelbrot.Bitmap.Height);
+    FBufferImage.SetSize(FMandelbrot.Width, FMandelbrot.Height);
     FBufferImage.Canvas.Draw(0, 0, FMandelbrot.Bitmap);
+    PaintBox.Invalidate;
 
     Panel_Head.Enabled := True;
     Form_Main.Cursor := crDefault;
     PaintBox.Cursor := crDefault;
-    PaintBox.Invalidate;
     FCalculating := False;
     UpdateStatus;
   end;
