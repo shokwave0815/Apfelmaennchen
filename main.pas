@@ -42,7 +42,7 @@ type
     procedure PaintBoxPaint(Sender: TObject);
     procedure PaintBoxResize(Sender: TObject);
   private
-    FIsStartup: Boolean;
+    FIsStartup: boolean;
     FCalculating: boolean;
     FRenderTime: double;
     FStartTime: double;
@@ -51,7 +51,6 @@ type
     procedure Center(const AX: integer; const AY: integer);
     procedure UpdateStatus;
     procedure StartCalculation;
-    procedure FinishCalculation;
   public
 
   end;
@@ -65,7 +64,8 @@ implementation
 
 procedure TForm_Main.FormCreate(Sender: TObject);
 begin
-  FIsStartup := True;;
+  FIsStartup := True;
+  ;
   FCalculating := False;
   Caption := MyVersion;
   PaintBox.Canvas.AntialiasingMode := amOff;
@@ -133,7 +133,7 @@ begin
   if FIsStartup then
   begin
     FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360);
-    FMandelbrot.OnFinishCalculation := @FinishCalculation;
+//    FMandelbrot.OnFinishCalculation := @FinishCalculation;
     FMandelBrot.SetStartPoint(-2.0, -1.3);
     StartCalculation;
     FIsStartup := False;
@@ -170,7 +170,8 @@ procedure TForm_Main.PaintBoxResize(Sender: TObject);
 var
   OldX, OldY: integer;
 begin
-  if (not FIsStartup) and (not FCalculating) and ((FMandelBrot.Width <> PaintBox.Width) or (FMandelBrot.Height <> PaintBox.Height)) then
+  if (not FIsStartup) and (not FCalculating) and ((FMandelBrot.Width <> PaintBox.Width) or
+    (FMandelBrot.Height <> PaintBox.Height)) then
   begin
     OldX := FMandelBrot.Width div 2;
     OldY := FMandelbrot.Height div 2;
@@ -191,9 +192,9 @@ end;
 
 procedure TForm_Main.UpdateStatus;
 begin
-  Label_Info.Caption := 'StartX: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartReal) + LineEnding +
-    'StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) + LineEnding +
-    'Zoom: ' + FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' + LineEnding +
+  Label_Info.Caption := 'StartX: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartReal) +
+    LineEnding + 'StartY: ' + FormatFloat('#,##0.0##########', FMandelBrot.StartImagenary) +
+    LineEnding + 'Zoom: ' + FormatFloat('#,##0.0', FMandelBrot.Zoom / 200) + 'x' + LineEnding +
     'MaxIterations: ' + FormatFloat('#,##0', FMandelBrot.MaxIterations * 1.0);
 
   if FCalculating then
@@ -202,7 +203,7 @@ begin
   end else
   begin
     Label_Calc.Caption := 'Rendertime: ' + FormatFloat('#,##0.0###', FRenderTime) + 's using ' +
-      IntToStr(FMandelBrot.NumThreads) + ' CPU-Threads for a picture size of ' +
+      IntToStr(FMandelBrot.NumMaxThreads) + ' CPU-Threads for a picture size of ' +
       IntToStr(FBufferImage.Width) + ' x ' + IntToStr(FBufferImage.Height) + ' pixels';
   end;
 end;
@@ -212,32 +213,25 @@ begin
   if not FCalculating then
   begin
     FCalculating := True;
-    Form_Main.Cursor:= crHourGlass;
-    PaintBox.Cursor:= crHourGlass;
+    Form_Main.Cursor := crHourGlass;
+    PaintBox.Cursor := crHourGlass;
     Panel_Head.Enabled := False;
     UpdateStatus;
+
     FStartTime := GetTickCount64;
     FMandelBrot.Calulate;
+    FRenderTime := (GetTickCount64 - FStartTime) / 1000;
+
+    FBufferImage.SetSize(FMandelbrot.Bitmap.Width, FMandelbrot.Bitmap.Height);
+    FBufferImage.Canvas.Draw(0, 0, FMandelbrot.Bitmap);
+
+    Panel_Head.Enabled := True;
+    Form_Main.Cursor := crDefault;
+    PaintBox.Cursor := crDefault;
+    PaintBox.Invalidate;
+    FCalculating := False;
+    UpdateStatus;
   end;
-end;
-
-//Called by event FMandelbrot.OnFinishCalculation
-procedure TForm_Main.FinishCalculation;
-var
-  NewBitmap: TBitmap;
-begin
-  FRenderTime := (GetTickCount64 - FStartTime) / 1000;
-
-  NewBitmap := FMandelbrot.GetBitmap;
-  FBufferImage.SetSize(NewBitmap.Width, NewBitmap.Height);
-  FBufferImage.Canvas.Draw(0, 0, NewBitmap);
-
-  Panel_Head.Enabled := True;
-  Form_Main.Cursor:= crDefault;
-  PaintBox.Cursor:= crDefault;
-  PaintBox.Invalidate;
-  FCalculating := False;
-  UpdateStatus;
 end;
 
 end.

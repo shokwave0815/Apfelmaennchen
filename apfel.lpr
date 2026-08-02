@@ -11,7 +11,7 @@ uses
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, main, mandelbrot, mandelbrotmt, mandelbrotthread,
-  ULogicalCPUCount
+  ULogicalCPUCount, threadmanager
   { you can add units after this };
 
 {$R *.res}

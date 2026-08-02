@@ -135,6 +135,10 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ULogicalCPUCount"/>
       </Unit>
+      <Unit>
+        <Filename Value="threadmanager.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

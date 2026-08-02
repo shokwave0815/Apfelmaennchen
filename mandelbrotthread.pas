@@ -9,20 +9,15 @@ uses
 
 type
 
-  TOnFinish = procedure(AMandelbrot: TMandelbrot) of object;
-
   { TMBThread }
 
   TMBThread = class(TThread)
   private
-    FOnFinish: TOnFinish;
     FMandelbrot: TMandelbrot;
-    FBitmap: TBitmap;
-    procedure CallOnFinished;
   protected
     procedure Execute; override;
   public
-    property OnFinish: TOnFinish read FOnFinish write FOnFinish;
+    property Mandelbrot: TMandelbrot read FMandelbrot;
     constructor Create(CreateSuspended: boolean; const AMandelbrot: TMandelbrot);
     destructor Destroy; override;
   end;
@@ -31,27 +26,16 @@ implementation
 
 { TMBThread }
 
-procedure TMBThread.CallOnFinished;
-begin
-  if Assigned(FOnFinish) then
-  begin
-    FOnFinish(FMandelbrot);
-  end;
-end;
-
 procedure TMBThread.Execute;
 begin
-  try
-    FMandelbrot.Calulate;
-  finally
-    Synchronize(@CallOnFinished);
-  end;
+  FMandelbrot.Calulate;
 end;
 
 constructor TMBThread.Create(CreateSuspended: boolean; const AMandelbrot: TMandelbrot);
 begin
   inherited Create(CreateSuspended);
-  FreeOnTerminate := True;
+
+  FreeOnTerminate := False;
   FMandelbrot := AMandelbrot;
 end;
 

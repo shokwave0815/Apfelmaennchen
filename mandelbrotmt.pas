@@ -5,14 +5,9 @@ unit mandelbrotmt;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Dialogs, mandelbrot, mandelbrotthread, ULogicalCPUCount;
-
-var
-  CritSec: TRTLCriticalSection;
+  Classes, SysUtils, Graphics, Dialogs, ULogicalCPUCount, threadmanager;
 
 type
-
-  TOnFinishCalculation = procedure of object;
 
   { TMandelbrotMT }
 
@@ -25,19 +20,16 @@ type
     FHeight: integer;
     FMaxIterations: QWord;
     FZoom: QWord;
-    FOnFinishCalculation: TOnFinishCalculation;
-    FNumRunningThreads: integer;
     FNumMaxThreads: integer;
-    procedure FOnExitThread(AMandelbrot: TMandelbrot);
   public
-    property NumThreads: integer read FNumMaxThreads;
+    property Bitmap: TBitmap read FBitmap;
+    property NumMaxThreads: integer read FNumMaxThreads;
     property Width: integer read FWidth;
     property Height: integer read FHeight;
     property StartReal: extended read FStartReal;
     property StartImagenary: extended read FStartImagenary;
     property Zoom: QWord read FZoom write FZoom;
     property MaxIterations: QWord read FMaxIterations write FMaxIterations;
-    property OnFinishCalculation: TOnFinishCalculation read FOnFinishCalculation write FOnFinishCalculation;
     constructor Create(const AWidth: integer; const AHeight: integer;
       const AZoom: QWord; const AMaxIterations: QWord);
     destructor Destroy; override;
@@ -45,34 +37,14 @@ type
     procedure SetStartPoint(const AReal: extended; const AImagenary: extended);
     procedure ZoomInOrOut(const AFactor: double);
     procedure Calulate; virtual;
-    function GetBitmap: TBitmap;
   end;
 
 implementation
-
-procedure TMandelbrotMT.FOnExitThread(AMandelbrot: TMandelbrot);
-begin
-  EnterCriticalSection(CritSec);
-  FBitmap.Canvas.Draw(AMandelbrot.OffsetX, 0, AMandelbrot.GetBitmap);
-  Dec(FNumRunningThreads);
-  LeaveCriticalSection(CritSec);
-
-  if FNumRunningThreads = 0 then
-  begin
-    //if all threads finished call event to repaint PaintBox.
-    if Assigned(FOnFinishCalculation) then
-    begin
-      FOnFinishCalculation;
-    end;
-  end;
-end;
 
 constructor TMandelbrotMT.Create(const AWidth: integer; const AHeight: integer; const AZoom: QWord;
   const AMaxIterations: QWord);
 begin
   inherited Create;
-
-  InitCriticalSection(CritSec);
 
   FWidth := AWidth;
   FHeight := AHeight;
@@ -83,12 +55,10 @@ begin
   FBitmap.SetSize(FWidth, FHeight);
 
   FNumMaxThreads := GetLogicalCPUCount;
-  FNumRunningThreads := 0;
 end;
 
 destructor TMandelbrotMT.Destroy;
 begin
-  DoneCriticalSection(CritSec);
   FreeAndNil(FBitmap);
   inherited Destroy;
 end;
@@ -129,36 +99,18 @@ end;
 
 procedure TMandelbrotMT.Calulate;
 var
-  mbThread: TMBThread;
-  PartMB: TMandelbrot;
-  i, PartWidth: integer;
+  ThreadManager: TMBThreadManager;
 begin
-  FBitmap.SetSize(FWidth, FHeight);
-  PartWidth := FWidth div FNumMaxThreads;
-  for i := 0 to FNumMaxThreads - 1 do
-  begin
-    PartMB := TMandelbrot.Create(i * PartWidth, PartWidth, FHeight, FZoom, FMaxIterations);
-    //add remainig pixel to be calculated ba the last thread
-    if i = FNumMaxThreads - 1 then
-    begin
-      PartMB.SetSize(PartMB.Width + FWidth mod FNumMaxThreads, PartMB.Height);
-    end;
-    PartMB.SetStartPoint(FStartReal + i * ((FWidth div FNumMaxThreads) / FZoom), FStartImagenary);
-    mbThread := TMBThread.Create(True, PartMB);
+  ThreadManager := TMBThreadManager.Create(True, FWidth, FHeight, FZoom, FMaxIterations, FStartReal, FStartImagenary, FNumMaxThreads);
+  //Check if creation failed.
+  if Assigned(ThreadManager.FatalException) then
+    raise ThreadManager.FatalException;
 
-    //Check if creation failed.
-    if Assigned(mbThread.FatalException) then
-      raise mbThread.FatalException;
-
-    mbThread.OnFinish := @FOnExitThread;
-    Inc(FNumRunningThreads);
-    mbThread.Start;
-  end;
-end;
-
-function TMandelbrotMT.GetBitmap: TBitmap;
-begin
-  Result := FBitmap;
+  //ThreadManager.OnFinish := @OnExitThread;
+  ThreadManager.Start;
+  ThreadManager.WaitFor;
+  FBitmap.Canvas.Draw(0, 0, ThreadManager.GetBitmap);
+  ThreadManager.Free;
 end;
 
 end.
