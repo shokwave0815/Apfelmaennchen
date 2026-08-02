@@ -55,6 +55,7 @@ begin
   EnterCriticalSection(CritSec);
   FBitmap.Canvas.Draw(AMandelbrot.OffsetX, 0, AMandelbrot.GetBitmap);
   Dec(FNumRunningThreads);
+  LeaveCriticalSection(CritSec);
 
   if FNumRunningThreads = 0 then
   begin
@@ -64,7 +65,6 @@ begin
       FOnFinishCalculation;
     end;
   end;
-  LeaveCriticalSection(CritSec);
 end;
 
 constructor TMandelbrotMT.Create(const AWidth: integer; const AHeight: integer; const AZoom: QWord;

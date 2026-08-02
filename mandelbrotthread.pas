@@ -18,6 +18,7 @@ type
     FOnFinish: TOnFinish;
     FMandelbrot: TMandelbrot;
     FBitmap: TBitmap;
+    procedure CallOnFinished;
   protected
     procedure Execute; override;
   public
@@ -30,15 +31,20 @@ implementation
 
 { TMBThread }
 
+procedure TMBThread.CallOnFinished;
+begin
+  if Assigned(FOnFinish) then
+  begin
+    FOnFinish(FMandelbrot);
+  end;
+end;
+
 procedure TMBThread.Execute;
 begin
   try
     FMandelbrot.Calulate;
   finally
-    if Assigned(FOnFinish) then
-    begin
-      FOnFinish(FMandelbrot);
-    end;
+    Synchronize(@CallOnFinished);
   end;
 end;
 
