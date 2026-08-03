@@ -65,7 +65,6 @@ implementation
 procedure TForm_Main.FormCreate(Sender: TObject);
 begin
   FIsStartup := True;
-  ;
   FCalculating := False;
   Caption := MyVersion;
   PaintBox.Canvas.AntialiasingMode := amOff;
@@ -133,7 +132,7 @@ begin
   if FIsStartup then
   begin
     FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360);
-//    FMandelbrot.OnFinishCalculation := @FinishCalculation;
+    //    FMandelbrot.OnFinishCalculation := @FinishCalculation;
     FMandelBrot.SetStartPoint(-2.0, -1.3);
     StartCalculation;
     FIsStartup := False;
@@ -218,7 +217,6 @@ begin
     Panel_Head.Enabled := False;
     UpdateStatus;
     Application.ProcessMessages;
-
 
     FStartTime := GetTickCount64;
     FMandelBrot.Calulate;

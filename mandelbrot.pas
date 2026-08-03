@@ -149,11 +149,11 @@ begin
       //FBitmap.Canvas.Pixels[x, y] := CalculateColor(NumIterations);
     end;
   end;
+  FBitmap.LoadFromRawImage(FRawImage, true);
 end;
 
 function TMandelbrot.GetBitmap: TBitmap;
 begin
-  FBitmap.LoadFromRawImage(FRawImage, true);
   Result := FBitmap;
 end;
 
