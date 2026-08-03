@@ -64,6 +64,9 @@ begin
   for i := 0 to FMaxThreads - 1 do
   begin
     Threads[i].WaitFor;
+    //Check if execution failed.
+    if Assigned(Threads[i].FatalException) then
+      raise Threads[i].FatalException;
   end;
 
   for i := 0 to FMaxThreads - 1 do

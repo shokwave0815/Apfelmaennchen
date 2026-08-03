@@ -76,6 +76,8 @@ begin
     Result := 1;  // Fallback for other platforms
   {$ENDIF}
 {$ENDIF FPC}
+  if Result < 1 then
+    Result := 1;
 end;
 
 end.
