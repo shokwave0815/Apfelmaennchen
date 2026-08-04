@@ -131,7 +131,7 @@ procedure TForm_Main.FormShow(Sender: TObject);
 begin
   if FIsStartup then
   begin
-    FMandelBrot := TMandelbrotMT.Create(PaintBox.Width, PaintBox.Height, 200, 360);
+    FMandelBrot := TMandelbrotMT.Create(512, 512, 200, 360);
     //    FMandelbrot.OnFinishCalculation := @FinishCalculation;
     FMandelBrot.SetStartPoint(-2.0, -1.3);
     StartCalculation;
@@ -178,7 +178,7 @@ begin
     FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
 
     Center(OldX, OldY);
-    StartCalculation;
+    //StartCalculation;
   end;
 end;
 
