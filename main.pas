@@ -178,7 +178,7 @@ begin
     FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
 
     Center(OldX, OldY);
-    //StartCalculation;
+    StartCalculation;
   end;
 end;
 

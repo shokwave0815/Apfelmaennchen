@@ -109,7 +109,8 @@ end;
 
 destructor TMandelbrot.Destroy;
 begin
-  //FRawImage.FreeData;
+  if FRawImage.Data <> nil then
+    FRawImage.FreeData;
   FreeAndNil(FBitmap);
   inherited Destroy;
 end;
@@ -125,31 +126,40 @@ begin
   FWidth := AWidth;
   FHeight := AHeight;
   FBitmap.SetSize(AWidth, AHeight);
+
+  if FRawImage.Data <> nil then
+    FRawImage.FreeData;
+  FRawImage.Init;
+  FRawImage.Description.Init_BPP32_A8R8G8B8_BIO_TTB(FWidth, FHeight);
+  FRawImage.CreateData(False);
 end;
 
 procedure TMandelbrot.Calulate;
 var
   x, y: integer;
   NumIterations: QWord;
-  PixelData: PByte;
-  BytesPerPixel: Integer;
-  PixelOffset: PByte;
+  PixelData: pbyte;
+  BytesPerPixel: integer;
+  PixelOffset: pbyte;
 begin
-  BytesPerPixel := FRawImage.Description.BitsPerPixel div 8;
-  PixelData := FRawImage.Data;
 
-  for y := 0 to FHeight - 1 do
+  if FRawImage.Data <> nil then
   begin
-    for x := 0 to FWidth - 1 do
+    BytesPerPixel := FRawImage.Description.BitsPerPixel div 8;
+    PixelData := FRawImage.Data;
+    for y := 0 to FHeight - 1 do
     begin
-      NumIterations := Iterate(x, y);
+      for x := 0 to FWidth - 1 do
+      begin
+        NumIterations := Iterate(x, y);
 
-      PixelOffset := PixelData + (Y * FRawImage.Description.BytesPerLine) + (X * BytesPerPixel);
-      PInteger(PixelOffset)^ := ColorToRGB(CalculateColor(NumIterations));
-      //FBitmap.Canvas.Pixels[x, y] := CalculateColor(NumIterations);
+        PixelOffset := PixelData + (Y * FRawImage.Description.BytesPerLine) + (X * BytesPerPixel);
+        PInteger(PixelOffset)^ := ColorToRGB(CalculateColor(NumIterations));
+        //FBitmap.Canvas.Pixels[x, y] := CalculateColor(NumIterations);
+      end;
     end;
+    FBitmap.LoadFromRawImage(FRawImage, False);
   end;
-  FBitmap.LoadFromRawImage(FRawImage, true);
 end;
 
 function TMandelbrot.GetBitmap: TBitmap;
