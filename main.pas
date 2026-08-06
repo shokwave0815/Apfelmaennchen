@@ -9,7 +9,7 @@ uses
   StdCtrls, LCLType, ComCtrls, Spin, mandelbrotmt;
 
 const
-  MyVersion = 'Apfelmännchen V1.1 ©2026 by shoKwave';
+  MyVersion = 'Apfelmännchen V1.2 ©2023-2026 by shoKwave';
 
 type
 
@@ -51,6 +51,7 @@ type
     procedure Center(const AX: integer; const AY: integer);
     procedure UpdateStatus;
     procedure StartCalculation;
+    procedure FinishCalculation;
   public
 
   end;
@@ -93,6 +94,7 @@ end;
 
 procedure TForm_Main.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  CloseAction := CloseAction;
   FreeAndNil(FBufferImage);
   FreeAndNil(FMandelBrot);
 end;
@@ -117,6 +119,7 @@ end;
 
 procedure TForm_Main.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
+  Shift := Shift;
   case Key of
     VK_MULTIPLY: FMandelBrot.MaxIterations := Round(FMandelBrot.MaxIterations * 1.2);
     VK_DIVIDE: FMandelBrot.MaxIterations := Round(FMandelBrot.MaxIterations / 1.2);
@@ -131,10 +134,16 @@ procedure TForm_Main.FormShow(Sender: TObject);
 begin
   if FIsStartup then
   begin
+    // set starting point and base size of mandelbrot
     FMandelBrot := TMandelbrotMT.Create(512, 512, 200, 360);
-    //    FMandelbrot.OnFinishCalculation := @FinishCalculation;
+    FMandelBrot.OnCalculationDone:= @FinishCalculation;
     FMandelBrot.SetStartPoint(-2.0, -1.3);
+
+    // center mandelbrot in PaintBox, nessesary if screen is zoomed
+    FMandelBrot.SetSize(PaintBox.Width, PaintBox.Height);
+    Center(256, 256);
     StartCalculation;
+
     FIsStartup := False;
   end;
 end;
@@ -220,18 +229,22 @@ begin
 
     FStartTime := GetTickCount64;
     FMandelBrot.Calulate;
-    FRenderTime := (GetTickCount64 - FStartTime) / 1000;
-
-    FBufferImage.SetSize(FMandelbrot.Width, FMandelbrot.Height);
-    FBufferImage.Canvas.Draw(0, 0, FMandelbrot.Bitmap);
-    PaintBox.Invalidate;
-
-    Panel_Head.Enabled := True;
-    Form_Main.Cursor := crDefault;
-    PaintBox.Cursor := crDefault;
-    FCalculating := False;
-    UpdateStatus;
   end;
+end;
+
+procedure TForm_Main.FinishCalculation;
+begin
+  FRenderTime := (GetTickCount64 - FStartTime) / 1000;
+
+  FBufferImage.SetSize(FMandelbrot.Width, FMandelbrot.Height);
+  FBufferImage.Canvas.Draw(0, 0, FMandelbrot.Bitmap);
+  PaintBox.Invalidate;
+
+  Panel_Head.Enabled := True;
+  Form_Main.Cursor := crDefault;
+  PaintBox.Cursor := crDefault;
+  FCalculating := False;
+  UpdateStatus;
 end;
 
 end.

@@ -8,10 +8,12 @@ uses
   Classes, SysUtils, Graphics, mandelbrotthread, mandelbrot;
 
 type
+  TOnFinished = procedure(ABitmap: TBitmap) of Object;
   { TMBThreadManager }
 
   TMBThreadManager = class(TThread)
   private
+    FOnFinished: TOnFinished;
     FWidth: integer;
     Fheight: integer;
     FZoom: QWord;
@@ -23,6 +25,7 @@ type
   protected
     procedure Execute; override;
   public
+    property OnFinished: TOnFinished read FOnFinished write FOnFinished;
     constructor Create(CreateSuspended: boolean; const AWidth, AHeight: integer;
       const AZoom, AMaxIterations: QWord; const AStartReal, AStartImagenary: extended; AMaxThreads: Integer);
     destructor Destroy; override;
@@ -44,6 +47,7 @@ begin
   PartWidth := FWidth div FMaxThreads;
   for i := 0 to FMaxThreads - 1 do
   begin
+    // The TMandelbrot will be freed in thread on destroy
     PartMB := TMandelbrot.Create(i * PartWidth, PartWidth, FHeight, FZoom, FMaxIterations);
     //add remainig pixel to be calculated ba the last thread
     if i = FMaxThreads - 1 then
@@ -54,7 +58,7 @@ begin
 
     Threads[i] := TMBThread.Create(True, PartMB);
 
-    //Check if creation failed.
+    //Check creation failed.
     if Assigned(Threads[i].FatalException) then
       raise Threads[i].FatalException;
 
@@ -64,7 +68,7 @@ begin
   for i := 0 to FMaxThreads - 1 do
   begin
     Threads[i].WaitFor;
-    //Check if execution failed.
+    //Check execution failed.
     if Assigned(Threads[i].FatalException) then
       raise Threads[i].FatalException;
   end;
@@ -76,6 +80,8 @@ begin
   end;
 
   SetLength(Threads, 0);
+  if Assigned(FOnFinished) then
+    FOnFinished(FBitmap);
 end;
 
 constructor TMBThreadManager.Create(CreateSuspended: boolean; const AWidth,
@@ -83,7 +89,7 @@ constructor TMBThreadManager.Create(CreateSuspended: boolean; const AWidth,
   AStartImagenary: extended; AMaxThreads: Integer);
 begin
   inherited Create(CreateSuspended);
-  FreeOnTerminate := False;
+  FreeOnTerminate := True;
   FWidth := AWidth;
   FHeight := AHeight;
   FZoom := AZoom;

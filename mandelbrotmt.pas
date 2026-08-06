@@ -8,11 +8,12 @@ uses
   Classes, SysUtils, Graphics, Dialogs, ULogicalCPUCount, threadmanager;
 
 type
-
+  TOnCalculationDone = procedure of Object;
   { TMandelbrotMT }
 
   TMandelbrotMT = class(TObject)
   private
+    FOnCalculationDone: TOnCalculationDone;
     FBitmap: TBitmap;
     FStartReal: extended;
     FStartImagenary: extended;
@@ -22,6 +23,7 @@ type
     FZoom: QWord;
     FNumMaxThreads: integer;
   public
+    property OnCalculationDone: TOnCalculationDone read FOnCalculationDone write FOnCalculationDone;
     property Bitmap: TBitmap read FBitmap;
     property NumMaxThreads: integer read FNumMaxThreads;
     property Width: integer read FWidth;
@@ -37,6 +39,7 @@ type
     procedure SetStartPoint(const AReal: extended; const AImagenary: extended);
     procedure ZoomInOrOut(const AFactor: double);
     procedure Calulate; virtual;
+    procedure AllThreadsFinished(ABitmap: TBitmap);
   end;
 
 implementation
@@ -102,15 +105,20 @@ var
   ThreadManager: TMBThreadManager;
 begin
   ThreadManager := TMBThreadManager.Create(True, FWidth, FHeight, FZoom, FMaxIterations, FStartReal, FStartImagenary, FNumMaxThreads);
-  //Check if creation failed.
+  ThreadManager.OnFinished := @AllThreadsFinished;
+  //Check creation failed.
   if Assigned(ThreadManager.FatalException) then
     raise ThreadManager.FatalException;
 
   ThreadManager.Start;
-  ThreadManager.WaitFor;
+end;
+
+procedure TMandelbrotMT.AllThreadsFinished(ABitmap: TBitmap);
+begin
   FBitmap.SetSize(FWidth, FHeight);
-  FBitmap.Canvas.Draw(0, 0, ThreadManager.GetBitmap);
-  ThreadManager.Free;
+  FBitmap.Canvas.Draw(0, 0, ABitmap);
+  if Assigned(FOnCalculationDone) then
+    FOnCalculationDone;
 end;
 
 end.
