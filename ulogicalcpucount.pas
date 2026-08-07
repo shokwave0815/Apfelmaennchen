@@ -46,7 +46,6 @@ function GetLogicalCPUCount: int32;
   {$ENDIF}
 {$ENDIF FPC}
 begin
-  Result := 1;  // Fallback for other platforms
 {$IFNDEF FPC}  // For Delphi
   Result := System.CPUCount;
 {$ELSE}  // For FreePascal
@@ -73,9 +72,11 @@ begin
   {$ELSEIF DEFINED(DARWIN) OR DEFINED(FREEBSD)}
     Len := SizeOf(Result);
     fpSysCtlbyname(PChar('hw.logicalcpu'), @Result, @Len, nil, 0);
+  {$ELSE}
+    Result := 1;  // Fallback for other platforms
   {$ENDIF}
 {$ENDIF FPC}
-  if Result < 1 then  //guard if something went wrong
+  if Result < 1 then
     Result := 1;
 end;
 

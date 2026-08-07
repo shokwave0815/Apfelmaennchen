@@ -99,6 +99,8 @@ begin
   FMaxIterations := AMaxIterations;
 
   FBitmap := TBitmap.Create;
+  FBitmap.SetSize(FWidth, FHeight);
+  FBitmap.Clear;
 
   FRawImage.Init;
   FRawImage.Description.Init_BPP32_A8R8G8B8_BIO_TTB(FWidth, FHeight);
@@ -153,6 +155,7 @@ begin
 
         PixelOffset := PixelData + (Y * FRawImage.Description.BytesPerLine) + (X * BytesPerPixel);
         PInteger(PixelOffset)^ := ColorToRGB(CalculateColor(NumIterations));
+        //FBitmap.Canvas.Pixels[x, y] := CalculateColor(NumIterations);
       end;
     end;
     FBitmap.LoadFromRawImage(FRawImage, False);
