@@ -42,6 +42,7 @@ type
     procedure SetSize(const AWidth: integer; const AHeight: integer);
     procedure Calulate; virtual;
     function GetBitmap: TBitmap;
+    function GetRawImage: TRawImage;
   end;
 
 implementation
@@ -106,9 +107,8 @@ end;
 
 destructor TMandelbrot.Destroy;
 begin
-  //Don't free date of RawImage if LoadFromRawImage 2nd parameter is true
-  {if FRawImage.Data <> nil then
-    FRawImage.FreeData;}
+  if FRawImage.Data <> nil then
+    FRawImage.FreeData;
   FreeAndNil(FBitmap);
   inherited Destroy;
 end;
@@ -155,13 +155,18 @@ begin
         PInteger(PixelOffset)^ := ColorToRGB(CalculateColor(NumIterations));
       end;
     end;
-    FBitmap.LoadFromRawImage(FRawImage, True);
+    FBitmap.LoadFromRawImage(FRawImage, False);
   end;
 end;
 
 function TMandelbrot.GetBitmap: TBitmap;
 begin
   Result := FBitmap;
+end;
+
+function TMandelbrot.GetRawImage: TRawImage;
+begin
+  Result := FRawImage;
 end;
 
 end.
